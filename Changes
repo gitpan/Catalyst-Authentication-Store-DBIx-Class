@@ -1,6 +1,12 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
-0.11    2007-XX-XX
+0.102   2008-01-23
+        Catalyst::Authentication::Store::DBIx::Class::User
+          - Explicitly call auto_create() against resultset()
+          - Explicitly call auto_update() against _user()
+          - Document the above
+
+0.101   2007-12-02
         Implemented basic auto_update_user and auto_create_user support
 
 0.10    2007-07-07 3pm CST

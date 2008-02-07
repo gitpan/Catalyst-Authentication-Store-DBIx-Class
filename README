@@ -217,7 +217,7 @@ USAGE
                     password => $password,
                     'dbix_class' => 
                         {
-                            searchargs = [ { -or => [ username => $username,
+                            searchargs => [ { -or => [ username => $username,
                                                       email => $email,
                                                       clientid => $clientid ] 
                                            },
@@ -245,7 +245,7 @@ USAGE
                
     if ($c->authenticate({ 
                                    password => $password,
-                                   'dbix_class' => {  resultset = $rs }
+                                   'dbix_class' => {  resultset => $rs }
                                  })) {
                # do successful authentication actions here.
             }

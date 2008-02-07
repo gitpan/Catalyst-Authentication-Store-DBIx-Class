@@ -168,6 +168,17 @@ sub obj {
     return $self->get_object;
 }
 
+sub auto_create {
+    my $self = shift;
+    $self->_user( $self->resultset->auto_create( @_ ) );
+    return $self;
+}
+
+sub auto_update {
+    my $self = shift;
+    $self->_user->auto_update( @_ );
+}
+
 sub AUTOLOAD {
     my $self = shift;
     (my $method) = (our $AUTOLOAD =~ /([^:]+)$/);
@@ -243,6 +254,29 @@ Retrieves the DBIx::Class object that corresponds to this user
 =head2 obj (method)
 
 Synonym for get_object
+
+=head2 auto_create
+
+This is called when the auto_create_user option is turned on in 
+Catalyst::Plugin::Authentication and a user matching the authinfo provided is not found. 
+By default, this will call the C<auto_create()> method of the resultset associated
+with this object. It is up to you to implement that method.
+
+=head2 auto_update
+
+This is called when the auto_update_user option is turned on in
+Catalyst::Plugin::Authentication. Note that by default the DBIx::Class store
+uses every field in the authinfo hash to match the user. This means any
+information you provide with the intent to update must be ignored during the
+user search process. Otherwise the information will most likely cause the user
+record to not be found. To ignore fields in the search process, you
+have to add the fields you wish to update to the 'ignore_fields_in_find'
+authinfo element.  Alternately, you can use one of the advanced row retrieval
+methods (searchargs or resultset).
+
+By default, auto_update will call the C<auto_update()> method of the
+DBIx::Class::Row object associated with the user. It is up to you to implement
+that method (probably in your schema file)
 
 =head1 BUGS AND LIMITATIONS
 

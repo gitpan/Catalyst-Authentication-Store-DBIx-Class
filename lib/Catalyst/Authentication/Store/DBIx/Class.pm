@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.101";
+our $VERSION= "0.102";
 
 
 BEGIN {
@@ -321,7 +321,7 @@ the user.  An example will probably make more sense:
             password => $password,
             'dbix_class' => 
                 {
-                    searchargs = [ { -or => [ username => $username,
+                    searchargs => [ { -or => [ username => $username,
                                               email => $email,
                                               clientid => $clientid ] 
                                    },
@@ -349,7 +349,7 @@ within your login action and use it for retrieving the user. A simple example:
        
     if ($c->authenticate({ 
                            password => $password,
-                           'dbix_class' => {  resultset = $rs }
+                           'dbix_class' => {  resultset => $rs }
                          })) {
        # do successful authentication actions here.
     } 

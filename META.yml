@@ -4,7 +4,7 @@ author: Jason Kuri (jayk@cpan.org)
 build_requires: 
   Test::More: 0
 distribution_type: module
-generated_by: Module::Install version 0.670
+generated_by: Module::Install version 0.67
 license: perl
 meta-spec: 
   url: http://module-build.sourceforge.net/META-spec-v1.3.html
@@ -15,7 +15,7 @@ no_index:
     - inc
     - t
 requires: 
-  Catalyst::Plugin::Authentication: 0
+  Catalyst::Plugin::Authentication: 0.10005
   Catalyst::Runtime: 0
   perl: 5.8.1
-version: 0.101
+version: 0.102
