@@ -32,6 +32,7 @@ perl_version '5.8.1';
 
 requires (  'Catalyst::Runtime'                 => 0,
             'Catalyst::Plugin::Authentication'  => '0.10005',
+            'DBIx::Class'                       => 0,
          );
 
 

@@ -1,5 +1,9 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.103   2008-02-07
+        Added missing DBIx::Class dependancy in Makefile.PL so 
+        that the damn test bots stop emailing me. 
+
 0.102   2008-01-23
         Catalyst::Authentication::Store::DBIx::Class::User
           - Explicitly call auto_create() against resultset()
