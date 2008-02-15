@@ -49,6 +49,7 @@ BEGIN {
                     store => {
                         'class' => 'DBIx::Class',
                         'user_class' => 'TestApp::User',
+                        'use_userdata_from_session' => 0,
                     },
                 },
             },

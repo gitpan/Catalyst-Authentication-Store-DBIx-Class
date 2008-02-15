@@ -19,4 +19,4 @@ requires:
   Catalyst::Runtime: 0
   DBIx::Class: 0
   perl: 5.8.1
-version: 0.103
+version: 0.104

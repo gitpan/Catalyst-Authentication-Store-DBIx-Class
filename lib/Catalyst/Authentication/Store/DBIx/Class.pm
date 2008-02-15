@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.103";
+our $VERSION= "0.104";
 
 
 BEGIN {
@@ -43,10 +43,9 @@ sub new {
 sub from_session {
     my ( $self, $c, $frozenuser ) = @_;
 
-    return $frozenuser if ref $frozenuser;
-    
+#    return $frozenuser if ref $frozenuser;
+
     my $user = $self->config->{'store_user_class'}->new($self->{'config'}, $c);
-    
     return $user->from_session($frozenuser, $c);
 }
 
@@ -113,7 +112,7 @@ This documentation refers to version 0.10.
                                 },
                                 store => {
                                     class => 'DBIx::Class',
-            	                    user_class => 'MyApp::Users',
+            	                    user_class => 'MyApp::User',
             	                    id_field => 'user_id',
             	                    role_relation => 'roles',
             	                    role_field => 'rolename',	                
@@ -165,11 +164,12 @@ The DBIx::Class storage module has several configuration options
                                 },
                                 store => {
                                     class => 'DBIx::Class',
-            	                    user_class => 'MyApp::Users',
+            	                    user_class => 'MyApp::User',
             	                    id_field => 'user_id',
             	                    role_relation => 'roles',
             	                    role_field => 'rolename',
-            	                    ignore_fields_in_find => [ 'remote_name' ]          
+            	                    ignore_fields_in_find => [ 'remote_name' ],
+            	                    use_userdata_from_session => 1,          
             	                }
                 	        }
                     	}
@@ -222,6 +222,23 @@ which should be ignored when creating the DBIx::Class search to retrieve a
 user. This makes it possible to avoid problems when a credential requires an
 authinfo element whose name overlaps with a column name in your users table.
 If this doesn't make sense to you, you probably don't need it.
+
+=item use_userdata_from_session
+
+Under normal circumstances, on each request the user's data is re-retrieved 
+from the database using the primary key for the user table.  When this flag 
+is set in the configuration, it causes the DBIx::Class store to avoid this
+database hit on session restore.  Instead, the user object's column data 
+is retrieved from the session and used as-is.  
+
+B<NOTE>: Since the user object's column
+data is only stored in the session during the initial authentication of 
+the user, turning this on can potentially lead to a situation where the data
+in $c->user is different from what is stored the database.  You can force
+a reload of the data from the database at any time by calling $c->user->get_object(1);
+Note that this will update $c->user for the remainder of this request.  
+It will NOT update the session.  If you need to update the session
+you should call $c->update_user_in_session() as well.  
 
 =item store_user_class
 

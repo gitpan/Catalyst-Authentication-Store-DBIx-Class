@@ -2,6 +2,7 @@ package Catalyst::Authentication::Store::DBIx::Class::User;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use base qw/Catalyst::Authentication::User/;
 use base qw/Class::Accessor::Fast/;
 
@@ -21,7 +22,7 @@ sub new {
     
     bless $self, $class;
     
-
+    ## Note to self- add handling of multiple-column primary keys.
     if (!exists($self->config->{'id_field'})) {
         my @pks = $self->{'resultset'}->result_source->primary_columns;
         if ($#pks == 0) {
@@ -135,15 +136,23 @@ sub roles {
 sub for_session {
     my $self = shift;
     
-    return $self->get($self->config->{'id_field'});
+    #return $self->get($self->config->{'id_field'});
+    my %userdata = $self->_user->get_columns();
+    return \%userdata;
 }
 
 sub from_session {
     my ($self, $frozenuser, $c) = @_;
     
-    # this could be a lot better.  But for now it just assumes $frozenuser is an id and uses find_user
-    # XXX: hits the database on every request?  Not good...
-    return $self->load( { $self->config->{'id_field'} => $frozenuser }, $c);
+    ## if use_userdata_from_session is defined in the config, we fill in the user data from the session.
+    if (exists($self->config->{'use_userdata_from_session'}) && $self->config->{'use_userdata_from_session'} != 0) {
+        my $obj = $self->resultset->new_result({ %$frozenuser });
+        $obj->in_storage(1);
+        $self->_user($obj);
+        return $self;
+    } else {
+        return $self->load( { $self->config->{'id_field'} => $frozenuser->{$self->config->{'id_field'}} }, $c);
+    }
 }
 
 sub get {
@@ -157,15 +166,19 @@ sub get {
 }
 
 sub get_object {
-    my $self = shift;
+    my ($self, $force) = @_;
     
+    if ($force) {
+        $self->_user->discard_changes;
+    }
+
     return $self->_user;
 }
 
 sub obj {
-    my $self = shift;
+    my ($self, $force) = @_;
     
-    return $self->get_object;
+    return $self->get_object($force);
 }
 
 sub auto_create {

@@ -1,5 +1,8 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.104   2008-02-15
+        Added ability to avoid DB hits when restoring from session
+
 0.103   2008-02-07
         Added missing DBIx::Class dependancy in Makefile.PL so 
         that the damn test bots stop emailing me. 

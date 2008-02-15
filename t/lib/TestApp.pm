@@ -116,9 +116,9 @@ sub user_logout : Global {
 
 sub get_session_user : Global {
     my ( $self, $c ) = @_;
-
+ 
     if ( $c->user_exists ) {
-        $c->res->body( $c->user->get('username') );
+        $c->res->body($c->user->get('username')); # . " " . Dumper($c->user->get_columns()) );
     }
 }
 
