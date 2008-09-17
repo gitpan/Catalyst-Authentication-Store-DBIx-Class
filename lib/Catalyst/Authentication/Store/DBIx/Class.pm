@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.105";
+our $VERSION= "0.106";
 
 
 BEGIN {
@@ -113,7 +113,6 @@ This documentation refers to version 0.10.
                                 store => {
                                     class => 'DBIx::Class',
             	                    user_class => 'MyApp::User',
-            	                    id_field => 'user_id',
             	                    role_relation => 'roles',
             	                    role_field => 'rolename',	                
             	                }
@@ -165,7 +164,6 @@ The DBIx::Class storage module has several configuration options
                                 store => {
                                     class => 'DBIx::Class',
             	                    user_class => 'MyApp::User',
-            	                    id_field => 'user_id',
             	                    role_relation => 'roles',
             	                    role_field => 'rolename',
             	                    ignore_fields_in_find => [ 'remote_name' ],
