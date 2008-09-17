@@ -17,7 +17,7 @@ BEGIN {
         or plan skip_all =>
         "DBIx::Class is required for this test";
 
-    plan tests => 14;
+    plan tests => 15;
 
     $ENV{TESTAPP_DB_FILE} = "$FindBin::Bin/auth.db" unless exists($ENV{TESTAPP_DB_FILE});
 
@@ -92,6 +92,14 @@ use Catalyst::Test 'TestApp';
     ok( my $res = request('http://localhost/resultset_login?email=j%40cpants.org&password=letmein'), 'request ok' );
     is( $res->content, 'jayk logged in', 'resultset based login ok' );
 }
+
+{
+    $ENV{TESTAPP_CONFIG}->{authentication}->{realms}->{users}->{store}->{user_class} = 'Nonexistent::Class';
+    my $res = request('http://localhost/user_login?username=joeuser&password=hackme');
+    like( $res->content, qr/\$\Qc->model('Nonexistent::Class') did not return a resultset. Did you set user_class correctly?/, 'test for wrong user_class' );
+}
+	    
+	    
 
 
 # clean up

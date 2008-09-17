@@ -32,23 +32,23 @@ SYNOPSIS
                         };
 
         # Log a user in:
-        
-    sub login : Global {
+    
+        sub login : Global {
             my ( $self, $c ) = @_;
-            
-        $c->authenticate({  
-                              username => $c->req->params->username,
+        
+            $c->authenticate({  
+                              screen_name => $c->req->params->username,
                               password => $c->req->params->password,
                               status => [ 'registered', 'loggedin', 'active']
                               }))
         }
-        
-    # verify a role 
-        
-    if ( $c->check_user_roles( 'editor' ) ) {
+    
+        # verify a role 
+    
+        if ( $c->check_user_roles( 'editor' ) ) {
             # do editor stuff
         }
-
+    
 DESCRIPTION
     The Catalyst::Authentication::Store::DBIx::Class class provides access
     to authentication information stored in a database via DBIx::Class.
@@ -90,12 +90,6 @@ CONFIGURATION
         Contains the class name (as passed to $c->model()) of the
         DBIx::Class schema to use as the source for user information. This
         config item is REQUIRED.
-
-    id_field
-        Contains the field name containing the unique identifier for a user.
-        This is used when storing and retrieving a user from the session.
-        The value in this field should correspond to a single user in the
-        database. Defaults to 'id'.
 
     role_column
         If your role information is stored in the same table as the rest of
@@ -144,12 +138,25 @@ CONFIGURATION
 
     store_user_class
         This allows you to override the authentication user class that the
-        DBIx::Class store module uses to perform it's work. Most of the work
+        DBIx::Class store module uses to perform its work. Most of the work
         done in this module is actually done by the user class,
         Catalyst::Authentication::Store::DBIx::Class::User, so overriding
         this doesn't make much sense unless you are using your own class to
         extend the functionality of the existing class. Chances are you do
         not want to set this.
+
+    id_field
+        In most cases, this config variable does not need to be set, as
+        Catalyst::Authentication::Store::DBIx::Class will determine the
+        primary key of the user table on it's own. If you need to override
+        the default, or your user table has multiple primary keys, then
+        id_field should contain the column name that should be used to
+        restore the user. A given value in this column should correspond to
+        a single user in the database. Note that this is used ONLY when
+        restoring a user from the session and has no bearing whatsoever in
+        the initial authentication process. Note also that if
+        use_userdata_from_session is enabled, this config parameter is not
+        used at all.
 
 USAGE
     The Catalyst::Authentication::Store::DBIx::Class storage module is not
@@ -161,13 +168,13 @@ USAGE
     retrieval methods Searchargs and Resultset.
 
   Simple Retrieval
-    The first, and most common, method is simple retrieval. As it's name
+    The first, and most common, method is simple retrieval. As its name
     implies simple retrieval allows you to simply to provide the column =>
     value pairs that should be used to locate the user in question. An
     example of this usage is below:
 
         if ($c->authenticate({  
-                              username => $c->req->params->{'username'},
+                              screen_name => $c->req->params->{'username'},
                               password => $c->req->params->{'password'},
                               status => [ 'registered', 'active', 'loggedin']
                              })) {
@@ -176,14 +183,14 @@ USAGE
         }
 
     The above example would attempt to retrieve a user whose username column
-    matched the username provided, and whose status column matched one of
-    the values provided. These name => value pairs are used more or less
-    directly in the DBIx::Class' search() routine, so in most cases, you can
-    use DBIx::Class syntax to retrieve the user according to whatever rules
-    you have.
+    (here, screen_name) matched the username provided, and whose status
+    column matched one of the values provided. These name => value pairs are
+    used more or less directly in the DBIx::Class' search() routine, so in
+    most cases, you can use DBIx::Class syntax to retrieve the user
+    according to whatever rules you have.
 
     NOTE: Because the password in most cases is encrypted - it is not used
-    directly but it's encryption and comparison with the value provided is
+    directly but its encryption and comparison with the value provided is
     usually handled by the Password Credential. Part of the Password
     Credential's behavior is to remove the password argument from the
     authinfo that is passed to the storage module. See
@@ -221,8 +228,8 @@ USAGE
     between credential and store key names. It's a good idea to avoid using
     it in this way unless you are sure you have an overlap/modification
     issue. However, the two advanced retrieval methods, searchargs and
-    resultset, require it's use, as they are only processed as part of the
-    'dbix_class' hash
+    resultset, require its use, as they are only processed as part of the
+    'dbix_class' hash.
 
     Searchargs
         The searchargs method of retrieval allows you to specify an arrayref
@@ -261,13 +268,13 @@ USAGE
 
             my $rs = $c->model('MyApp::User')->search({ email => $c->request->params->{'email'} });
                ... # further $rs adjustments
-               
-    if ($c->authenticate({ 
+       
+            if ($c->authenticate({ 
                                    password => $password,
                                    'dbix_class' => {  resultset => $rs }
                                  })) {
                # do successful authentication actions here.
-            }
+            } 
 
         Be aware that the resultset method will not verify that you are
         passing a resultset that is attached to the same user_class as

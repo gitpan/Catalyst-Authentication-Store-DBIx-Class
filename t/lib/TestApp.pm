@@ -12,9 +12,14 @@ sub user_login : Global {
     my ( $self, $c ) = @_;
 
     ## this allows anyone to login regardless of status.
-    $c->authenticate({ username => $c->request->params->{'username'},
-                       password => $c->request->params->{'password'}
-                     });
+    eval {
+        $c->authenticate({ username => $c->request->params->{'username'},
+                           password => $c->request->params->{'password'}
+                         });
+        1;
+    } or do {
+        return $c->res->body($@);
+    };
 
     if ( $c->user_exists ) {
         if ( $c->req->params->{detach} ) {
@@ -26,6 +31,7 @@ sub user_login : Global {
         $c->res->body( 'not logged in' );
     }
 }
+
 
 sub notdisabled_login : Global {
     my ( $self, $c ) = @_;

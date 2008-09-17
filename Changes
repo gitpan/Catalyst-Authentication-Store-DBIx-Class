@@ -1,5 +1,11 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.105   2008-03-19
+        Throw an exception if no fields are provided during authenticate
+           - better than retrieving a random user. 
+           - still possible to do an empty search by using searchargs
+        
+
 0.104   2008-02-15
         Added ability to avoid DB hits when restoring from session
 

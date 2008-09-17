@@ -31,6 +31,9 @@ sub new {
             Catalyst::Exception->throw("user table does not contain a single primary key column - please specify 'id_field' in config!");
         }
     }
+    if (not $self->{'resultset'}) {
+        Catalyst::Exception->throw("\$c->model('${ \$self->config->{user_class} }') did not return a resultset. Did you set user_class correctly?");
+    }
     if (!$self->{'resultset'}->result_source->has_column($self->config->{'id_field'})) {
         Catalyst::Exception->throw("id_field set to " .  $self->config->{'id_field'} . " but user table has no column by that name!");
     }
@@ -80,7 +83,11 @@ sub load {
                 $searchargs->{$key} = $authinfo->{$key};
             }
         }
-        $self->_user($self->resultset->search($searchargs)->first);
+        if (keys %{$searchargs}) {
+            $self->_user($self->resultset->search($searchargs)->first);
+        } else {
+            Catalyst::Exeption->throw("User retrieval failed: no columns from " . $self->config->{'user_class'} . " were provided");
+        }
     }
 
     if ($self->get_object) {
@@ -115,7 +122,7 @@ sub roles {
     if (exists($self->config->{'role_column'})) {
         my $role_data = $self->get($self->config->{'role_column'});
         if ($role_data) { 
-            @roles = split /[ ,\|]+/, $self->get($self->config->{'role_column'});
+            @roles = split /[\s,\|]+/, $self->get($self->config->{'role_column'});
         }
         $self->_roles(\@roles);
     } elsif (exists($self->config->{'role_relation'})) {
@@ -137,6 +144,10 @@ sub for_session {
     my $self = shift;
     
     #return $self->get($self->config->{'id_field'});
+    
+    #my $frozenuser = $self->_user->result_source->schema->freeze( $self->_user );
+    #return $frozenuser;
+    
     my %userdata = $self->_user->get_columns();
     return \%userdata;
 }
@@ -144,14 +155,30 @@ sub for_session {
 sub from_session {
     my ($self, $frozenuser, $c) = @_;
     
-    ## if use_userdata_from_session is defined in the config, we fill in the user data from the session.
-    if (exists($self->config->{'use_userdata_from_session'}) && $self->config->{'use_userdata_from_session'} != 0) {
+    #my $obj = $self->resultset->result_source->schema->thaw( $frozenuser );
+    #$self->_user($obj);
+    
+    #if (!exists($self->config->{'use_userdata_from_session'}) || $self->config->{'use_userdata_from_session'} == 0) {
+#        $self->_user->discard_changes();
+#    }
+#    
+#    return $self;
+#    
+## if use_userdata_from_session is defined in the config, we fill in the user data from the session.
+    if (exists($self->config->{'use_userdata_from_session'}) && $self->config->{'use_userdata_from_session'} != 0)
+    {
         my $obj = $self->resultset->new_result({ %$frozenuser });
         $obj->in_storage(1);
         $self->_user($obj);
         return $self;
     } else {
-        return $self->load( { $self->config->{'id_field'} => $frozenuser->{$self->config->{'id_field'}} }, $c);
+        my $id;
+        if (ref($frozenuser) eq 'HASH') {
+            $id = $frozenuser->{$self->config->{'id_field'}};
+        } else {
+            $id = $frozenuser;
+        }
+        return $self->load( { $self->config->{'id_field'} => $id }, $c);
     }
 }
 
@@ -247,13 +274,11 @@ Returns an array of roles associated with this user, if roles are configured for
 
 =head2 for_session
 
-Returns a serialized user for storage in the session.  Currently, this is the value of the field
-specified by the 'id_field' config variable.
+Returns a serialized user for storage in the session.  
 
 =head2 from_session
 
-Revives a serialized user from storage in the session.  Currently, this uses the serialized data as the
-value of the 'id_field' config variable.
+Revives a serialized user from storage in the session. 
 
 =head2 get ( $fieldname )
 

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.104";
+our $VERSION= "0.105";
 
 
 BEGIN {
@@ -127,7 +127,7 @@ This documentation refers to version 0.10.
         my ( $self, $c ) = @_;
         
         $c->authenticate({  
-                          username => $c->req->params->username,
+                          screen_name => $c->req->params->username,
                           password => $c->req->params->password,
                           status => [ 'registered', 'loggedin', 'active']
                           }))
@@ -187,12 +187,6 @@ contains the class name of the store to be used.
 Contains the class name (as passed to $c->model()) of the DBIx::Class schema
 to use as the source for user information.  This config item is B<REQUIRED>.
 
-=item id_field
-
-Contains the field name containing the unique identifier for a user.  This is 
-used when storing and retrieving a user from the session.  The value in this
-field should correspond to a single user in the database.  Defaults to 'id'.
-
 =item role_column
 
 If your role information is stored in the same table as the rest of your user
@@ -243,12 +237,25 @@ you should call $c->update_user_in_session() as well.
 =item store_user_class
 
 This allows you to override the authentication user class that the 
-DBIx::Class store module uses to perform it's work.  Most of the
+DBIx::Class store module uses to perform its work.  Most of the
 work done in this module is actually done by the user class, 
 L<Catalyst::Authentication::Store::DBIx::Class::User>, so
 overriding this doesn't make much sense unless you are using your
 own class to extend the functionality of the existing class.  
 Chances are you do not want to set this.
+
+=item id_field
+
+In most cases, this config variable does not need to be set, as
+Catalyst::Authentication::Store::DBIx::Class will determine the primary
+key of the user table on it's own.  If you need to override the default, 
+or your user table has multiple primary keys, then id_field
+should contain the column name that should be used to restore the user.
+A given value in this column should correspond to a single user in the database.
+Note that this is used B<ONLY> when restoring a user from the session and 
+has no bearing whatsoever in the initial authentication process.  Note also
+that if use_userdata_from_session is enabled, this config parameter
+is not used at all.
 
 =back
 
@@ -264,13 +271,13 @@ Searchargs and Resultset.
 
 =head2 Simple Retrieval 
 
-The first, and most common, method is simple retrieval. As it's name implies
+The first, and most common, method is simple retrieval. As its name implies
 simple retrieval allows you to simply to provide the column => value pairs
 that should be used to locate the user in question. An example of this usage
 is below:
 
     if ($c->authenticate({  
-                          username => $c->req->params->{'username'},
+                          screen_name => $c->req->params->{'username'},
                           password => $c->req->params->{'password'},
                           status => [ 'registered', 'active', 'loggedin']
                          })) {
@@ -278,14 +285,14 @@ is below:
         # ... authenticated user code here
     }
 
-The above example would attempt to retrieve a user whose username column
-matched the username provided, and whose status column matched one of the
+The above example would attempt to retrieve a user whose username column (here, 
+screen_name) matched the username provided, and whose status column matched one of the
 values provided. These name => value pairs are used more or less directly in
 the DBIx::Class' search() routine, so in most cases, you can use DBIx::Class
 syntax to retrieve the user according to whatever rules you have.
 
 NOTE: Because the password in most cases is encrypted - it is not used
-directly but it's encryption and comparison with the value provided is usually
+directly but its encryption and comparison with the value provided is usually
 handled by the Password Credential. Part of the Password Credential's behavior
 is to remove the password argument from the authinfo that is passed to the
 storage module. See L<Catalyst::Authentication::Credential::Password>.
@@ -321,8 +328,8 @@ DBIx::Class authentication store. Reasons to do this are to avoid credential
 modification of the authinfo hash, or to avoid overlap between credential and
 store key names. It's a good idea to avoid using it in this way unless you are
 sure you have an overlap/modification issue. However, the two advanced
-retrieval methods, B<searchargs> and B<resultset>, require it's use, as they 
-are only processed as part of the 'dbix_class' hash
+retrieval methods, B<searchargs> and B<resultset>, require its use, as they 
+are only processed as part of the 'dbix_class' hash.
 
 =over 4
 
