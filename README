@@ -3,7 +3,7 @@ NAME
     Catalyst Authentication using DBIx::Class
 
 VERSION
-    This documentation refers to version 0.10.
+    This documentation refers to version 0.107.
 
 SYNOPSIS
         use Catalyst qw/
@@ -81,7 +81,7 @@ CONFIGURATION
                         };
 
     class
-        Class is part of the core Catalyst::Plugin::Authentication module,
+        Class is part of the core Catalyst::Plugin::Authentication module;
         it contains the class name of the store to be used.
 
     user_class
@@ -94,12 +94,12 @@ CONFIGURATION
         your user information, this item tells the module which field
         contains your role information. The DBIx::Class authentication store
         expects the data in this field to be a series of role names
-        separated by some combination of spaces, commas or pipe characters.
+        separated by some combination of spaces, commas, or pipe characters.
 
     role_relation
         If your role information is stored in a separate table, this is the
         name of the relation that will lead to the roles the user is in. If
-        this is specified then a role_field is also required. Also when
+        this is specified, then a role_field is also required. Also when
         using this method it is expected that your role table will return
         one row for each role the user is in.
 
@@ -146,7 +146,7 @@ CONFIGURATION
     id_field
         In most cases, this config variable does not need to be set, as
         Catalyst::Authentication::Store::DBIx::Class will determine the
-        primary key of the user table on it's own. If you need to override
+        primary key of the user table on its own. If you need to override
         the default, or your user table has multiple primary keys, then
         id_field should contain the column name that should be used to
         restore the user. A given value in this column should correspond to
@@ -183,7 +183,7 @@ USAGE
     The above example would attempt to retrieve a user whose username column
     (here, screen_name) matched the username provided, and whose status
     column matched one of the values provided. These name => value pairs are
-    used more or less directly in the DBIx::Class' search() routine, so in
+    used more or less directly in the DBIx::Class search() routine, so in
     most cases, you can use DBIx::Class syntax to retrieve the user
     according to whatever rules you have.
 
@@ -195,7 +195,7 @@ USAGE
     Catalyst::Authentication::Credential::Password.
 
     One thing you need to know about this retrieval method is that the name
-    portion of the pair is checked against the user class' column list.
+    portion of the pair is checked against the user class's column list.
     Pairs are only used if a matching column is found. Other pairs will be
     ignored. This means that you can only provide simple name-value pairs,
     and that some more advanced DBIx::Class constructs, such as '-or',
@@ -254,9 +254,10 @@ USAGE
             }
 
         The above would allow authentication based on any of the three items
-        - username, email or clientid and would prefetch the data related to
-        that user from the preferences table. The searchargs array is passed
-        directly to the search() method associated with the user_class.
+        - username, email, or clientid - and would prefetch the data related
+        to that user from the preferences table. The searchargs array is
+        passed directly to the search() method associated with the
+        user_class.
 
     Resultset
         The resultset method of retrieval allows you to directly specify a
@@ -269,7 +270,7 @@ USAGE
        
             if ($c->authenticate({ 
                                    password => $password,
-                                   'dbix_class' => {  resultset => $rs }
+                                   'dbix_class' => { resultset => $rs }
                                  })) {
                # do successful authentication actions here.
             } 
@@ -300,7 +301,7 @@ USAGE
 
 METHODS
     There are no publicly exported routines in the DBIx::Class
-    authentication store (or indeed in most authentication stores) However,
+    authentication store (or indeed in most authentication stores). However,
     below is a description of the routines required by
     Catalyst::Plugin::Authentication for all authentication stores. Please
     see the documentation for Catalyst::Plugin::Authentication::Internals
@@ -311,13 +312,13 @@ METHODS
 
   find_user ( $authinfo, $c )
     Finds a user using the information provided in the $authinfo hashref and
-    returns the user, or undef on failure; This is usually called from the
+    returns the user, or undef on failure. This is usually called from the
     Credential. This translates directly to a call to
     Catalyst::Authentication::Store::DBIx::Class::User's load() method.
 
   for_session ( $c, $user )
     Prepares a user to be stored in the session. Currently returns the value
-    of the user's id field - (as indicated by the 'id_field' config element)
+    of the user's id field (as indicated by the 'id_field' config element)
 
   from_session ( $c, $frozenuser)
     Revives a user from the session based on the info provided in
@@ -333,17 +334,17 @@ METHODS
 
   auto_create_user( $authinfo, $c )
     This method is called if the realm's auto_create_user setting is true.
-    It will delegate to the user class' (resultset) "auto_create" method.
+    It will delegate to the user class's (resultset) "auto_create" method.
 
 NOTES
     As of the current release, session storage consists of simply storing
     the user's id in the session, and then using that same id to re-retrieve
-    the users information from the database upon restoration from the
+    the user's information from the database upon restoration from the
     session. More dynamic storage of user information in the session is
     intended for a future release.
 
 BUGS AND LIMITATIONS
-    None known currently, please email the author if you find any.
+    None known currently; please email the author if you find any.
 
 SEE ALSO
     Catalyst::Plugin::Authentication,

@@ -86,7 +86,7 @@ sub load {
         if (keys %{$searchargs}) {
             $self->_user($self->resultset->search($searchargs)->first);
         } else {
-            Catalyst::Exeption->throw("User retrieval failed: no columns from " . $self->config->{'user_class'} . " were provided");
+            Catalyst::Exception->throw("User retrieval failed: no columns from " . $self->config->{'user_class'} . " were provided");
         }
     }
 

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.106";
+our $VERSION= "0.107";
 
 
 BEGIN {
@@ -36,7 +36,7 @@ sub new {
 }
 
 ## --jk note to self:
-## let's use DBICs get_columns method to return a hash and save / restore that
+## let's use DBIC's get_columns method to return a hash and save / restore that
 ## from the session.  Then we can respond to get() calls, etc. in most cases without
 ## resorting to a DB call.  If user_object is called, THEN we can hit the DB and
 ## return a real object.  
@@ -92,7 +92,7 @@ Catalyst::Authentication::Store::DBIx::Class - A storage class for Catalyst Auth
 
 =head1 VERSION
 
-This documentation refers to version 0.10.
+This documentation refers to version 0.107.
 
 =head1 SYNOPSIS
 
@@ -177,7 +177,7 @@ The DBIx::Class storage module has several configuration options
 
 =item class
 
-Class is part of the core Catalyst::Plugin::Authentication module, it
+Class is part of the core Catalyst::Plugin::Authentication module; it
 contains the class name of the store to be used.
 
 =item user_class
@@ -191,13 +191,13 @@ If your role information is stored in the same table as the rest of your user
 information, this item tells the module which field contains your role
 information.  The DBIx::Class authentication store expects the data in this
 field to be a series of role names separated by some combination of spaces, 
-commas or pipe characters.  
+commas, or pipe characters.  
 
 =item role_relation
 
 If your role information is stored in a separate table, this is the name of
 the relation that will lead to the roles the user is in.  If this is 
-specified then a role_field is also required.  Also when using this method
+specified, then a role_field is also required.  Also when using this method
 it is expected that your role table will return one row for each role 
 the user is in.
 
@@ -246,7 +246,7 @@ Chances are you do not want to set this.
 
 In most cases, this config variable does not need to be set, as
 Catalyst::Authentication::Store::DBIx::Class will determine the primary
-key of the user table on it's own.  If you need to override the default, 
+key of the user table on its own.  If you need to override the default, 
 or your user table has multiple primary keys, then id_field
 should contain the column name that should be used to restore the user.
 A given value in this column should correspond to a single user in the database.
@@ -286,7 +286,7 @@ is below:
 The above example would attempt to retrieve a user whose username column (here, 
 screen_name) matched the username provided, and whose status column matched one of the
 values provided. These name => value pairs are used more or less directly in
-the DBIx::Class' search() routine, so in most cases, you can use DBIx::Class
+the DBIx::Class search() routine, so in most cases, you can use DBIx::Class
 syntax to retrieve the user according to whatever rules you have.
 
 NOTE: Because the password in most cases is encrypted - it is not used
@@ -296,7 +296,7 @@ is to remove the password argument from the authinfo that is passed to the
 storage module. See L<Catalyst::Authentication::Credential::Password>.
 
 One thing you need to know about this retrieval method is that the name
-portion of the pair is checked against the user class' column list. Pairs are
+portion of the pair is checked against the user class's column list. Pairs are
 only used if a matching column is found. Other pairs will be ignored. This
 means that you can only provide simple name-value pairs, and that some more
 advanced DBIx::Class constructs, such as '-or', '-and', etc. are in most cases
@@ -356,7 +356,7 @@ the user.  An example will probably make more sense:
     }
 
 The above would allow authentication based on any of the three items -
-username, email or clientid and would prefetch the data related to that user
+username, email, or clientid - and would prefetch the data related to that user
 from the preferences table. The searchargs array is passed directly to the
 search() method associated with the user_class.
 
@@ -371,7 +371,7 @@ within your login action and use it for retrieving the user. A simple example:
        
     if ($c->authenticate({ 
                            password => $password,
-                           'dbix_class' => {  resultset => $rs }
+                           'dbix_class' => { resultset => $rs }
                          })) {
        # do successful authentication actions here.
     } 
@@ -403,7 +403,7 @@ and provide your own for_session and from_session routines.
 =head1 METHODS
 
 There are no publicly exported routines in the DBIx::Class authentication 
-store (or indeed in most authentication stores)  However, below is a 
+store (or indeed in most authentication stores). However, below is a 
 description of the routines required by L<Catalyst::Plugin::Authentication> 
 for all authentication stores.  Please see the documentation for 
 L<Catalyst::Plugin::Authentication::Internals> for more information.
@@ -416,14 +416,14 @@ Constructs a new store object.
 =head2 find_user ( $authinfo, $c ) 
 
 Finds a user using the information provided in the $authinfo hashref and
-returns the user, or undef on failure; This is usually called from the
+returns the user, or undef on failure. This is usually called from the
 Credential. This translates directly to a call to
 L<Catalyst::Authentication::Store::DBIx::Class::User>'s load() method.
 
 =head2 for_session ( $c, $user )
 
 Prepares a user to be stored in the session. Currently returns the value of
-the user's id field - (as indicated by the 'id_field' config element)
+the user's id field (as indicated by the 'id_field' config element)
 
 =head2 from_session ( $c, $frozenuser)
 
@@ -442,18 +442,18 @@ will delegate to the user object's C<auto_update> method.
 =head2 auto_create_user( $authinfo, $c )
 
 This method is called if the realm's auto_create_user setting is true. It
-will delegate to the user class' (resultset) C<auto_create> method.
+will delegate to the user class's (resultset) C<auto_create> method.
 
 =head1 NOTES
 
 As of the current release, session storage consists of simply storing the user's
-id in the session, and then using that same id to re-retrieve the users information
+id in the session, and then using that same id to re-retrieve the user's information
 from the database upon restoration from the session.  More dynamic storage of
 user information in the session is intended for a future release.
 
 =head1 BUGS AND LIMITATIONS
 
-None known currently, please email the author if you find any.
+None known currently; please email the author if you find any.
 
 =head1 SEE ALSO
 
