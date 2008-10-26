@@ -39,7 +39,7 @@ BEGIN {
                     },
                     store => {
                         'class' => 'DBIx::Class',
-                        'user_class' => 'TestApp::User',
+                        'user_model' => 'TestApp::User',
                         'role_column' => 'role_text'
                     },
                 },

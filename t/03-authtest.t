@@ -34,7 +34,7 @@ BEGIN {
                     },
                     store => {
                         'class' => 'DBIx::Class',
-                        'user_class' => 'TestApp::User',
+                        'user_model' => 'TestApp::User',
                     },
                 },
             },
@@ -94,9 +94,9 @@ use Catalyst::Test 'TestApp';
 }
 
 {
-    $ENV{TESTAPP_CONFIG}->{authentication}->{realms}->{users}->{store}->{user_class} = 'Nonexistent::Class';
+    $ENV{TESTAPP_CONFIG}->{authentication}->{realms}->{users}->{store}->{user_model} = 'Nonexistent::Class';
     my $res = request('http://localhost/user_login?username=joeuser&password=hackme');
-    like( $res->content, qr/\$\Qc->model('Nonexistent::Class') did not return a resultset. Did you set user_class correctly?/, 'test for wrong user_class' );
+    like( $res->content, qr/\$\Qc->model('Nonexistent::Class') did not return a resultset. Did you set user_model correctly?/, 'test for wrong user_class' );
 }
 	    
 	    

@@ -22,7 +22,7 @@ SYNOPSIS
                                     },
                                     store => {
                                         class => 'DBIx::Class',
-                                        user_class => 'MyApp::User',
+                                        user_model => 'MyApp::User',
                                         role_relation => 'roles',
                                         role_field => 'rolename',                   
                                     }
@@ -56,7 +56,8 @@ CONFIGURATION
     The DBIx::Class authentication store is activated by setting the store
     config's class element to DBIx::Class as shown above. See the
     Catalyst::Plugin::Authentication documentation for more details on
-    configuring the store.
+    configuring the store. You can also use
+    Catalyst::Authentication::Realm::SimpleDB for a simplified setup.
 
     The DBIx::Class storage module has several configuration options
 
@@ -70,7 +71,7 @@ CONFIGURATION
                                     },
                                     store => {
                                         class => 'DBIx::Class',
-                                        user_class => 'MyApp::User',
+                                        user_model => 'MyApp::User',
                                         role_relation => 'roles',
                                         role_field => 'rolename',
                                         ignore_fields_in_find => [ 'remote_name' ],
@@ -84,10 +85,12 @@ CONFIGURATION
         Class is part of the core Catalyst::Plugin::Authentication module;
         it contains the class name of the store to be used.
 
-    user_class
-        Contains the class name (as passed to $c->model()) of the
+    user_model
+        Contains the model name (as passed to $c->model()) of the
         DBIx::Class schema to use as the source for user information. This
-        config item is REQUIRED.
+        config item is REQUIRED. (Note that this option used to be called
+        user_class. user_class is still functional, but should be used only
+        for compatibility with previous configs.)
 
     role_column
         If your role information is stored in the same table as the rest of
@@ -257,7 +260,7 @@ USAGE
         - username, email, or clientid - and would prefetch the data related
         to that user from the preferences table. The searchargs array is
         passed directly to the search() method associated with the
-        user_class.
+        user_model.
 
     Resultset
         The resultset method of retrieval allows you to directly specify a
@@ -276,7 +279,7 @@ USAGE
             } 
 
         Be aware that the resultset method will not verify that you are
-        passing a resultset that is attached to the same user_class as
+        passing a resultset that is attached to the same user_model as
         specified in the config.
 
         NOTE: All of these methods of user retrieval, including the

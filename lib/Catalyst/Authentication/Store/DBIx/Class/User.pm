@@ -2,7 +2,6 @@ package Catalyst::Authentication::Store::DBIx::Class::User;
 
 use strict;
 use warnings;
-use Data::Dumper;
 use base qw/Catalyst::Authentication::User/;
 use base qw/Class::Accessor::Fast/;
 
@@ -13,15 +12,25 @@ BEGIN {
 sub new {
     my ( $class, $config, $c) = @_;
 
+	if (!defined($config->{'user_model'})) {
+		$config->{'user_model'} = $config->{'user_class'};
+	}
+
     my $self = {
-        resultset => $c->model($config->{'user_class'}),
+        resultset => $c->model($config->{'user_model'}),
         config => $config,
         _roles => undef,
         _user => undef
     };
     
     bless $self, $class;
+
     
+
+    if (not $self->{'resultset'}) {
+        Catalyst::Exception->throw("\$c->model('${ \$self->config->{user_model} }') did not return a resultset. Did you set user_model correctly?");
+    }
+
     ## Note to self- add handling of multiple-column primary keys.
     if (!exists($self->config->{'id_field'})) {
         my @pks = $self->{'resultset'}->result_source->primary_columns;
@@ -31,9 +40,7 @@ sub new {
             Catalyst::Exception->throw("user table does not contain a single primary key column - please specify 'id_field' in config!");
         }
     }
-    if (not $self->{'resultset'}) {
-        Catalyst::Exception->throw("\$c->model('${ \$self->config->{user_class} }') did not return a resultset. Did you set user_class correctly?");
-    }
+
     if (!$self->{'resultset'}->result_source->has_column($self->config->{'id_field'})) {
         Catalyst::Exception->throw("id_field set to " .  $self->config->{'id_field'} . " but user table has no column by that name!");
     }
@@ -86,7 +93,7 @@ sub load {
         if (keys %{$searchargs}) {
             $self->_user($self->resultset->search($searchargs)->first);
         } else {
-            Catalyst::Exception->throw("User retrieval failed: no columns from " . $self->config->{'user_class'} . " were provided");
+            Catalyst::Exception->throw("User retrieval failed: no columns from " . $self->config->{'user_model'} . " were provided");
         }
     }
 
@@ -95,7 +102,6 @@ sub load {
     } else {
         return undef;
     }
-    #$c->log->debug(dumper($self->{'user'}));
 
 }
 

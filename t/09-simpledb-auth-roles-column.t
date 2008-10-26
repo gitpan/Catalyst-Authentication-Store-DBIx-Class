@@ -28,24 +28,14 @@ BEGIN {
 
     $ENV{TESTAPP_CONFIG} = {
         name => 'TestApp',
-        authentication => {
-            default_realm => "users",
-            realms => {
-                users => {
-                    credential => {
-                        'class' => "Password",
-                        'password_field' => 'password',
-                        'password_type' => 'clear'
-                    },
-                    store => {
-                        'class' => 'DBIx::Class',
-                        'user_model' => 'TestApp::User',
-                        'role_relation' => 'roles',
-                        'role_field' => 'role'
-                    },
-                },
-            },
-        },
+        'Plugin::Authentication' => {
+            default => {
+				class => 'SimpleDB',
+				user_model => 'TestApp::User',
+				role_column => 'role_text'
+			}
+		}
+        
     };
 
     $ENV{TESTAPP_PLUGINS} = [
@@ -61,25 +51,25 @@ use Catalyst::Test 'TestApp';
 
 # test user's admin access
 {
-    ok( my $res = request('http://localhost/user_login?username=jayk&password=letmein&detach=is_admin'), 'request ok' );
+    ok( my $res = request('http://localhost/user_login?username=joeuser&password=hackme&detach=is_admin'), 'request ok' );
     is( $res->content, 'ok', 'user is an admin' );
 }
 
 # test unauthorized user's admin access
 {
-    ok( my $res = request('http://localhost/user_login?username=nuffin&password=much&detach=is_admin'), 'request ok' );
+    ok( my $res = request('http://localhost/user_login?username=jayk&password=letmein&detach=is_admin'), 'request ok' );
     is( $res->content, 'failed', 'user is not an admin' );
 }
 
 # test multiple auth roles
 {
-    ok( my $res = request('http://localhost/user_login?username=jayk&password=letmein&detach=is_admin_user'), 'request ok' );
+    ok( my $res = request('http://localhost/user_login?username=nuffin&password=much&detach=is_admin_user'), 'request ok' );
     is( $res->content, 'ok', 'user is an admin and a user' );
 }
 
 # test multiple unauth roles
 {
-    ok( my $res = request('http://localhost/user_login?username=nuffin&password=much&detach=is_admin_user'), 'request ok' );
+    ok( my $res = request('http://localhost/user_login?username=joeuser&password=hackme&detach=is_admin_user'), 'request ok' );
     is( $res->content, 'failed', 'user is not an admin and a user' );
 }
 

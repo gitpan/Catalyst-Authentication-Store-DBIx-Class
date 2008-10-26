@@ -31,7 +31,8 @@ all_from 'lib/Catalyst/Authentication/Store/DBIx/Class.pm';
 perl_version '5.8.1';
 
 requires (  'Catalyst::Runtime'                 => 0,
-            'Catalyst::Plugin::Authentication'  => '0.10005',
+            'Catalyst::Plugin::Authentication'  => '0.10008',
+            'Catalyst::Model::DBIC::Schema'     => 0,
             'DBIx::Class'                       => 0,
 			'Catalyst::Model::DBIC::Schema'		=> '0.18',
          );

@@ -1,8 +1,14 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.108   2008-09-25
+		Adding SimpleDB realm to simplify basic auth configuration
+		Changing user_class to user_model, per req. by mst to avoid confusing newbies.
+
 0.107   2008-09-29
-		   - Fix the typo in exception during authenticate
-		   - Doc fixes and clarifications
+		Fix the typo in exception during authenticate
+		Doc fixes and clarifications
+		Added missing dependency on Catalyst::Model::DBIC::Schema to Makefile.PL
+		   
 
 0.105   2008-03-19
         Throw an exception if no fields are provided during authenticate

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.107";
+our $VERSION= "0.108";
 
 
 BEGIN {
@@ -112,7 +112,7 @@ This documentation refers to version 0.107.
                                 },
                                 store => {
                                     class => 'DBIx::Class',
-            	                    user_class => 'MyApp::User',
+            	                    user_model => 'MyApp::User',
             	                    role_relation => 'roles',
             	                    role_field => 'rolename',	                
             	                }
@@ -146,9 +146,10 @@ access to authentication information stored in a database via DBIx::Class.
 =head1 CONFIGURATION
 
 The DBIx::Class authentication store is activated by setting the store
-config's B<class> element to DBIx::Class as shown above.  See the 
-L<Catalyst::Plugin::Authentication> documentation for more details on 
-configuring the store.
+config's B<class> element to DBIx::Class as shown above. See the
+L<Catalyst::Plugin::Authentication> documentation for more details on
+configuring the store. You can also use
+L<Catalyst::Authentication::Realm::SimpleDB> for a simplified setup.
 
 The DBIx::Class storage module has several configuration options
 
@@ -163,7 +164,7 @@ The DBIx::Class storage module has several configuration options
                                 },
                                 store => {
                                     class => 'DBIx::Class',
-            	                    user_class => 'MyApp::User',
+            	                    user_model => 'MyApp::User',
             	                    role_relation => 'roles',
             	                    role_field => 'rolename',
             	                    ignore_fields_in_find => [ 'remote_name' ],
@@ -180,10 +181,12 @@ The DBIx::Class storage module has several configuration options
 Class is part of the core Catalyst::Plugin::Authentication module; it
 contains the class name of the store to be used.
 
-=item user_class
+=item user_model
 
-Contains the class name (as passed to $c->model()) of the DBIx::Class schema
-to use as the source for user information.  This config item is B<REQUIRED>.
+Contains the model name (as passed to $c->model()) of the DBIx::Class schema
+to use as the source for user information. This config item is B<REQUIRED>.
+(Note that this option used to be called user_class. user_class is still
+functional, but should be used only for compatibility with previous configs.)
 
 =item role_column
 
@@ -358,7 +361,7 @@ the user.  An example will probably make more sense:
 The above would allow authentication based on any of the three items -
 username, email, or clientid - and would prefetch the data related to that user
 from the preferences table. The searchargs array is passed directly to the
-search() method associated with the user_class.
+search() method associated with the user_model.
 
 =item Resultset
 
@@ -377,7 +380,7 @@ within your login action and use it for retrieving the user. A simple example:
     } 
 
 Be aware that the resultset method will not verify that you are passing a
-resultset that is attached to the same user_class as specified in the config.
+resultset that is attached to the same user_model as specified in the config.
 
 NOTE: All of these methods of user retrieval, including the resultset method,
 consider the first row returned to be the matching user. In most cases there

@@ -10,6 +10,7 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
+lib/Catalyst/Authentication/Realm/SimpleDB.pm
 lib/Catalyst/Authentication/Store/DBIx/Class.pm
 lib/Catalyst/Authentication/Store/DBIx/Class/User.pm
 Makefile.PL
@@ -23,6 +24,9 @@ t/03-authtest.t
 t/04-authsessions.t
 t/05-auth-roles-relationship.t
 t/06-auth-roles-column.t
+t/07-authsessions-cached.t
+t/08-simpledb-auth-roles-relationship.t
+t/09-simpledb-auth-roles-column.t
 t/auth.db
 t/lib/SetupDB.pm
 t/lib/TestApp.pm

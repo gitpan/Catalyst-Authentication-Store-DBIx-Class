@@ -28,24 +28,12 @@ BEGIN {
 
     $ENV{TESTAPP_CONFIG} = {
         name => 'TestApp',
-        authentication => {
-            default_realm => "users",
-            realms => {
-                users => {
-                    credential => {
-                        'class' => "Password",
-                        'password_field' => 'password',
-                        'password_type' => 'clear'
-                    },
-                    store => {
-                        'class' => 'DBIx::Class',
-                        'user_model' => 'TestApp::User',
-                        'role_relation' => 'roles',
-                        'role_field' => 'role'
-                    },
-                },
-            },
-        },
+        'Plugin::Authentication' => {
+            default => {
+				class => 'SimpleDB',
+                user_model => 'TestApp::User',
+			}
+		}
     };
 
     $ENV{TESTAPP_PLUGINS} = [

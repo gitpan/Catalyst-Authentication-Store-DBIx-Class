@@ -49,7 +49,7 @@ BEGIN {
                     store => {
                         'class' => 'DBIx::Class',
                         'user_model' => 'TestApp::User',
-                        'use_userdata_from_session' => 0,
+                        'use_userdata_from_session' => 1,
                     },
                 },
             },
