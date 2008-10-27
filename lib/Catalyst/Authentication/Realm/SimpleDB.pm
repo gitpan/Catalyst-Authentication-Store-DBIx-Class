@@ -64,7 +64,7 @@ Catalyst::Authentication::Realm::SimpleDB - A simplified Catalyst authentication
         {  
             default => {
                 class => 'SimpleDB',
-                user_class => 'MyApp::User'
+                user_model => 'MyApp::User'
             }
         }
 
@@ -89,7 +89,7 @@ The SimpleDB Realm class configures the Catalyst authentication system based on 
 =over
 
 =item *
-Your user data is stored in a table that is accessible via $c->model('User');
+Your user data is stored in a table that is accessible via $c->model($cfg->{user_model});
 
 =item *
 Your passwords are stored in the 'password' field in your users table and are not encrypted.
@@ -104,8 +104,8 @@ Your user information is stored in the session once the user is authenticated.
 
 =back
 
-For the above usage, only one configuration option is necessary, 'user_class'.
-B<user_class> should contain the class name of your user class. See the
+For the above usage, only one configuration option is necessary, 'user_model'.
+B<user_model> should contain the class name of your user class. See the
 L</PREPARATION> section for info on how to set up your database for use with
 this module.
 
@@ -118,7 +118,7 @@ L<Catalyst::Authentication::Store::DBIx::Class>.
 
 =over 
 
-=item user_class
+=item user_model
 
 Contains the class name (as passed to $c->model() ) of the DBIx::Class schema
 to use as the source for user information.  This config item is B<REQUIRED>.
@@ -253,18 +253,6 @@ L<Catalyst::Authentication::Store::DBIx::Class>
 L<Catalyst::Plugin::Authorization::Roles>
 
 =back
-
-=head1 WARNINGS
-
-...
-
-=head1 NOTES
-
-...
-
-=head1 BUGS
-
-What?
 
 =cut
 

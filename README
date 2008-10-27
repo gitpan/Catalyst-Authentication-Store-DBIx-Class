@@ -3,7 +3,7 @@ NAME
     Catalyst Authentication using DBIx::Class
 
 VERSION
-    This documentation refers to version 0.107.
+    This documentation refers to version 0.108.
 
 SYNOPSIS
         use Catalyst qw/
