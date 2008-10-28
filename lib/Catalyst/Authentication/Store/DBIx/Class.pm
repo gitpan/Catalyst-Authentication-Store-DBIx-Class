@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.1081";
+our $VERSION= "0.1082";
 
 
 BEGIN {

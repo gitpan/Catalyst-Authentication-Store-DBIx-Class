@@ -11,7 +11,7 @@ sub new {
     my $newconfig = {
         credential => {
             class => 'Password',
-            password_type => 'clear'
+            password_type => 'crypted'
         },
         store => {
             class => 'DBIx::Class',
@@ -43,7 +43,11 @@ sub new {
         delete $newconfig->{'store'}{'role_relation'};
         delete $newconfig->{'store'}{'role_field'};
     }
-    
+
+    if ($newconfig->{'credential'}{'password_type'} eq 'clear') {
+		$app->log->warn("realm $realmname configured using a plaintext password type.  This is not secure.");
+	}
+	
     return $class->SUPER::new($realmname, $newconfig, $app);
 }
 
@@ -92,7 +96,7 @@ The SimpleDB Realm class configures the Catalyst authentication system based on 
 Your user data is stored in a table that is accessible via $c->model($cfg->{user_model});
 
 =item *
-Your passwords are stored in the 'password' field in your users table and are not encrypted.
+Your passwords are stored in the 'password' field in your users table and are encrypted using the standard crypt() routine.
 
 =item *
 Your roles for users are stored in a separate table and are directly
@@ -217,7 +221,7 @@ looks like this:
         default => {
             credential => {
                 class => 'Password',
-                password_type => 'clear'
+                password_type => 'crypted'
             },
             store => {
                 class => 'DBIx::Class',

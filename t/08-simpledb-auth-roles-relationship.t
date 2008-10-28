@@ -32,6 +32,7 @@ BEGIN {
             default => {
 				class => 'SimpleDB',
                 user_model => 'TestApp::User',
+                password_type => 'clear'
 			}
 		}
     };

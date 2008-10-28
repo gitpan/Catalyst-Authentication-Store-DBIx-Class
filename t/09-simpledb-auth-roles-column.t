@@ -32,7 +32,8 @@ BEGIN {
             default => {
 				class => 'SimpleDB',
 				user_model => 'TestApp::User',
-				role_column => 'role_text'
+				role_column => 'role_text',
+				password_type => 'clear'
 			}
 		}
         
