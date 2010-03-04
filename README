@@ -31,23 +31,23 @@ SYNOPSIS
                         };
 
         # Log a user in:
-    
-        sub login : Global {
-            my ( $self, $c ) = @_;
         
-            $c->authenticate({  
+    sub login : Global {
+            my ( $self, $c ) = @_;
+            
+        $c->authenticate({  
                               screen_name => $c->req->params->username,
                               password => $c->req->params->password,
                               status => [ 'registered', 'loggedin', 'active']
                               }))
         }
-    
-        # verify a role 
-    
-        if ( $c->check_user_roles( 'editor' ) ) {
+        
+    # verify a role 
+        
+    if ( $c->check_user_roles( 'editor' ) ) {
             # do editor stuff
         }
-    
+
 DESCRIPTION
     The Catalyst::Authentication::Store::DBIx::Class class provides access
     to authentication information stored in a database via DBIx::Class.
@@ -88,9 +88,13 @@ CONFIGURATION
     user_model
         Contains the model name (as passed to $c->model()) of the
         DBIx::Class schema to use as the source for user information. This
-        config item is REQUIRED. (Note that this option used to be called
-        user_class. user_class is still functional, but should be used only
-        for compatibility with previous configs.)
+        config item is REQUIRED.
+
+        (Note that this option used to be called "user_class". "user_class"
+        is still functional, but should be used only for compatibility with
+        previous configs. The setting called "user_class" on other
+        authentication stores is present, but named "store_user_class" in
+        this store)
 
     role_column
         If your role information is stored in the same table as the rest of
@@ -270,13 +274,13 @@ USAGE
 
             my $rs = $c->model('MyApp::User')->search({ email => $c->request->params->{'email'} });
                ... # further $rs adjustments
-       
-            if ($c->authenticate({ 
+               
+    if ($c->authenticate({ 
                                    password => $password,
                                    'dbix_class' => { resultset => $rs }
                                  })) {
                # do successful authentication actions here.
-            } 
+            }
 
         Be aware that the resultset method will not verify that you are
         passing a resultset that is attached to the same user_model as

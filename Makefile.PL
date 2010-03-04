@@ -1,4 +1,4 @@
-use inc::Module::Install 0.67;
+use inc::Module::Install 0.87;
 
 if( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/Catalyst/Authentication/Store/DBIx/Class.pm > README' );
@@ -41,5 +41,7 @@ requires (  'Catalyst::Runtime'                 => 0,
 test_requires 'Test::More';
 
 auto_install;
+resources repository => 'http://dev.catalystframework.org/repos/Catalyst/trunk/Catalyst-Authentication-Store-DBIx-Class';
+
 WriteAll;
 

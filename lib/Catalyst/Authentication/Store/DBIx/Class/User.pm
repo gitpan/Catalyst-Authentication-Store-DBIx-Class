@@ -93,7 +93,7 @@ sub load {
         if (keys %{$searchargs}) {
             $self->_user($self->resultset->search($searchargs)->first);
         } else {
-            Catalyst::Exception->throw("User retrieval failed: no columns from " . $self->config->{'user_model'} . " were provided");
+            Catalyst::Exception->throw("Failed to load user data.  You passed [" . join(',', keys %{$authinfo}) . "] to authenticate() but your user source (" .  $self->config->{'user_model'} . ") only has these columns: [" . join( ",", $self->resultset->result_source->columns ) . "]   Check your authenticate() call.");
         }
     }
 

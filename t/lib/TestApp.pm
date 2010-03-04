@@ -105,6 +105,30 @@ sub resultset_login : Global {
     }
 }
 
+sub bad_login : Global {
+    my ( $self, $c ) = @_;
+
+    ## this allows anyone to login regardless of status.
+    eval {
+        $c->authenticate({ william => $c->request->params->{'username'},
+                           the_bum => $c->request->params->{'password'}
+                         });
+        1;
+    } or do {
+        return $c->res->body($@);
+    };
+
+    if ( $c->user_exists ) {
+        if ( $c->req->params->{detach} ) {
+            $c->detach( $c->req->params->{detach} );
+        }
+        $c->res->body( $c->user->get('username') . ' logged in' );
+    }
+    else {
+        $c->res->body( 'not logged in' );
+    }
+}
+
 ## need to add a resultset login test and a search args login test
 
 sub user_logout : Global {

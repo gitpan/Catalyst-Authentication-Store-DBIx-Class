@@ -1,5 +1,12 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1083  2010-03-03
+        Tweaking exception message to better explain what people did wrong when 
+            they pass bad columns to authenticate.
+
+0.1082  2008-10-27
+        Documentation tweak to clarify user_class, store_user_class etc.
+
 0.108   2008-09-25
 		Adding SimpleDB realm to simplify basic auth configuration
 		Changing user_class to user_model, per req. by mst to avoid confusing newbies.

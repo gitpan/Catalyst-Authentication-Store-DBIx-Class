@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.1082";
+our $VERSION= "0.1083";
 
 
 BEGIN {
@@ -185,8 +185,11 @@ contains the class name of the store to be used.
 
 Contains the model name (as passed to $c->model()) of the DBIx::Class schema
 to use as the source for user information. This config item is B<REQUIRED>.
-(Note that this option used to be called user_class. user_class is still
-functional, but should be used only for compatibility with previous configs.)
+
+(Note that this option used to be called C<< user_class >>. C<< user_class >> is 
+still functional, but should be used only for compatibility with previous configs.
+The setting called C<< user_class >> on other authentication stores is
+present, but named C<< store_user_class >> in this store)
 
 =item role_column
 

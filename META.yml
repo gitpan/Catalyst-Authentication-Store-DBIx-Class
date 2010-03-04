@@ -3,13 +3,16 @@ abstract: 'A storage class for Catalyst Authentication using DBIx::Class'
 author:
   - 'Jason Kuri (jayk@cpan.org)'
 build_requires:
+  ExtUtils::MakeMaker: 6.42
   Test::More: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.75'
+generated_by: 'Module::Install version 0.91'
 license: perl
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.3.html
-  version: 1.3
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
 name: Catalyst-Authentication-Store-DBIx-Class
 no_index:
   directory:
@@ -21,4 +24,7 @@ requires:
   Catalyst::Runtime: 0
   DBIx::Class: 0
   perl: 5.8.1
-version: 0.1082
+resources:
+  license: http://dev.perl.org/licenses/
+  repository: http://dev.catalystframework.org/repos/Catalyst/trunk/Catalyst-Authentication-Store-DBIx-Class
+version: 0.1083
