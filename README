@@ -3,15 +3,15 @@ NAME
     Catalyst Authentication using DBIx::Class
 
 VERSION
-    This documentation refers to version 0.108.
+    This documentation refers to version 0.1100.
 
 SYNOPSIS
         use Catalyst qw/
                         Authentication
                         Authorization::Roles/;
 
-        __PACKAGE__->config->{authentication} = 
-                        {  
+        __PACKAGE__->config->{authentication} =
+                        {
                             default_realm => 'members',
                             realms => {
                                 members => {
@@ -24,27 +24,27 @@ SYNOPSIS
                                         class => 'DBIx::Class',
                                         user_model => 'MyApp::User',
                                         role_relation => 'roles',
-                                        role_field => 'rolename',                   
+                                        role_field => 'rolename',
                                     }
                                 }
                             }
                         };
 
         # Log a user in:
-        
-    sub login : Global {
+
+        sub login : Global {
             my ( $self, $c ) = @_;
-            
-        $c->authenticate({  
+
+            $c->authenticate({
                               screen_name => $c->req->params->username,
                               password => $c->req->params->password,
                               status => [ 'registered', 'loggedin', 'active']
                               }))
         }
-        
-    # verify a role 
-        
-    if ( $c->check_user_roles( 'editor' ) ) {
+
+        # verify a role
+
+        if ( $c->check_user_roles( 'editor' ) ) {
             # do editor stuff
         }
 
@@ -61,8 +61,8 @@ CONFIGURATION
 
     The DBIx::Class storage module has several configuration options
 
-        __PACKAGE__->config->{authentication} = 
-                        {  
+        __PACKAGE__->config->{authentication} =
+                        {
                             default_realm => 'members',
                             realms => {
                                 members => {
@@ -75,7 +75,7 @@ CONFIGURATION
                                         role_relation => 'roles',
                                         role_field => 'rolename',
                                         ignore_fields_in_find => [ 'remote_name' ],
-                                        use_userdata_from_session => 1,          
+                                        use_userdata_from_session => 1,
                                     }
                                     }
                             }
@@ -178,7 +178,7 @@ USAGE
     value pairs that should be used to locate the user in question. An
     example of this usage is below:
 
-        if ($c->authenticate({  
+        if ($c->authenticate({
                               screen_name => $c->req->params->{'username'},
                               password => $c->req->params->{'password'},
                               status => [ 'registered', 'active', 'loggedin']
@@ -244,18 +244,18 @@ USAGE
         example will probably make more sense:
 
             if ($c->authenticate(
-                { 
+                {
                     password => $password,
-                    'dbix_class' => 
+                    'dbix_class' =>
                         {
                             searchargs => [ { -or => [ username => $username,
                                                       email => $email,
-                                                      clientid => $clientid ] 
+                                                      clientid => $clientid ]
                                            },
-                                           { prefetch => qw/ preferences / } 
+                                           { prefetch => qw/ preferences / }
                                          ]
                         }
-                } ) ) 
+                } ) )
             {
                 # do successful authentication actions here.
             }
@@ -274,8 +274,8 @@ USAGE
 
             my $rs = $c->model('MyApp::User')->search({ email => $c->request->params->{'email'} });
                ... # further $rs adjustments
-               
-    if ($c->authenticate({ 
+
+            if ($c->authenticate({
                                    password => $password,
                                    'dbix_class' => { resultset => $rs }
                                  })) {

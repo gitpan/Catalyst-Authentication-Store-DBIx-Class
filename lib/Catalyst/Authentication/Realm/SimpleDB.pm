@@ -7,7 +7,7 @@ use base qw/Catalyst::Authentication::Realm/;
 
 sub new {
     my ($class, $realmname, $config, $app) = @_;
-    
+
     my $newconfig = {
         credential => {
             class => 'Password',
@@ -20,19 +20,19 @@ sub new {
             use_userdata_from_session => '1'
         }
     };
-    
+
     if (!defined($config->{'user_model'})) {
 	    Catalyst::Exception->throw("Unable to initialize authentication, no user_model specified in SimpleDB config.");
    	}
 
-    
-    ## load any overrides for the credential 
+
+    ## load any overrides for the credential
     foreach my $key (qw/ password_type password_field password_hash_type/) {
         if (exists($config->{$key})) {
             $newconfig->{credential}{$key} = $config->{$key};
         }
-    } 
-    
+    }
+
     ## load any overrides for the store
     foreach my $key (qw/ user_model role_relation role_field role_column use_userdata_from_session/) {
         if (exists($config->{$key})) {
@@ -43,7 +43,7 @@ sub new {
         delete $newconfig->{'store'}{'role_relation'};
         delete $newconfig->{'store'}{'role_field'};
     }
-    
+
     return $class->SUPER::new($realmname, $newconfig, $app);
 }
 
@@ -60,8 +60,8 @@ Catalyst::Authentication::Realm::SimpleDB - A simplified Catalyst authentication
         Authentication
     /;
 
-    __PACKAGE__->config->{'Plugin::Authentication'} = 
-        {  
+    __PACKAGE__->config->{'Plugin::Authentication'} =
+        {
             default => {
                 class      => 'SimpleDB',
                 user_model => 'MyApp::Schema::Users',
@@ -69,17 +69,17 @@ Catalyst::Authentication::Realm::SimpleDB - A simplified Catalyst authentication
         }
 
     # later on ...
-    $c->authenticate({ username => 'myusername', 
+    $c->authenticate({ username => 'myusername',
                        password => 'mypassword' });
 
     my $age = $c->user->get('age');
 
-    $c->logout;            
+    $c->logout;
 
 
 =head1 DESCRIPTION
 
-The Catalyst::Authentication::Realm::SimpleDB provides a simple way to configure Catalyst Authentication 
+The Catalyst::Authentication::Realm::SimpleDB provides a simple way to configure Catalyst Authentication
 when using the most common configuration of a password protected user retrieved from an SQL database.
 
 =head1 CONFIGURATION
@@ -116,17 +116,17 @@ More information on these options can be found in
 L<Catalyst::Authentication::Credential::Password> and
 L<Catalyst::Authentication::Store::DBIx::Class>.
 
-=over 
+=over
 
 =item user_model
 
 Contains the class name (as passed to $c->model() ) of the DBIx::Class schema
 to use as the source for user information.  This config item is B<REQUIRED>.
 
-=item password_field 
+=item password_field
 
 If your password field is not 'password' set this option to the name of your password field.  Note that if you change this
-to, say 'users_password' you will need to use that in the authenticate call:  
+to, say 'users_password' you will need to use that in the authenticate call:
 
     $c->authenticate({ username => 'bob', users_password => 'foo' });
 
@@ -134,27 +134,27 @@ to, say 'users_password' you will need to use that in the authenticate call:
 
 If the password is not stored in plaintext you will need to define what format the password is in.  The common options are
 B<crypted> and B<hashed>.  Crypted uses the standard unix crypt to encrypt the password.  Hashed uses the L<Digest> modules to
-perform password hashing.  
+perform password hashing.
 
 =item password_hash_type
 
-If you use a hashed password type - this defines the type of hashing. See L<Catalyst::Authentication::Credential::Password> 
-for more details on this setting.  
+If you use a hashed password type - this defines the type of hashing. See L<Catalyst::Authentication::Credential::Password>
+for more details on this setting.
 
 =item role_column
 
-If your users roles are stored directly in your user table, set this to the column name that contains your roles.  For 
-example, if your user table contains a field called 'permissions', the value of role_column would be 'permissions'. 
-B<NOTE>: If multiple values are stored in the role column, they should be space or pipe delimited. 
+If your users roles are stored directly in your user table, set this to the column name that contains your roles.  For
+example, if your user table contains a field called 'permissions', the value of role_column would be 'permissions'.
+B<NOTE>: If multiple values are stored in the role column, they should be space or pipe delimited.
 
 =item role_relation and role_field
 
-These define an alternate role relationship name and the column that holds the role's name in plain text.  See 
+These define an alternate role relationship name and the column that holds the role's name in plain text.  See
 L<Catalyst::Authentication::Store::DBIx::Class/CONFIGURATION> for more details on these settings.
 
 =item use_userdata_from_session
 
-This is a simple 1 / 0 setting which determines how a user's data is saved / restored from the session.  If 
+This is a simple 1 / 0 setting which determines how a user's data is saved / restored from the session.  If
 it is set to 1, the user's complete information (at the time of authentication) is cached between requests.
 If it is set to 0, the users information is loaded from the database on each request.
 
@@ -205,15 +205,15 @@ C<lib/MyApp/Schema/UserRoles.pm>:
 
     __PACKAGE__->belongs_to(role => 'MyApp::Schema::Roles', 'role_id');
 
-=head1 MIGRATION 
+=head1 MIGRATION
 
 If and when your application becomes complex enough that you need more features
 than SimpleDB gives you access to, you can migrate to a standard Catalyst
 Authentication configuration fairly easily.  SimpleDB simply creates a standard
 Auth config based on the inputs you give it.  The config SimpleDB creates by default
-looks like this:  
+looks like this:
 
-    MyApp->config('Plugin::Authentication') = { 
+    MyApp->config('Plugin::Authentication') = {
         default => {
             credential => {
                 class => 'Password',
@@ -227,7 +227,7 @@ looks like this:
                 user_model => $user_model_from_simpledb_config
 	        }
 	    }
-    }; 
+    };
 
 
 =head1 SEE ALSO
@@ -235,9 +235,9 @@ looks like this:
 This module relies on a number of other modules to do it's job.  For more information
 you can refer to the following:
 
-=over 
+=over
 
-=item * 
+=item *
 L<Catalyst::Manual::Tutorial::Authentication>
 
 =item *
