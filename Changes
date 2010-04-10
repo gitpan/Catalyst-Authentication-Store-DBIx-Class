@@ -1,5 +1,8 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1200  2010-04-10
+        Release 0.1100 as a stable version without further modifications.
+
 0.1100  2010-03-29 - development release
         Support compound primary keys for looking up users.
 

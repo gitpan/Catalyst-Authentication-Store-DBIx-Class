@@ -250,7 +250,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1100.
+This documentation refers to version 0.1200.
 
 =head1 SYNOPSIS
 

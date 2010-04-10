@@ -40,8 +40,7 @@ requires (  'Catalyst::Runtime'                 => 0,
 
 test_requires 'Test::More';
 
-auto_install;
-resources repository => 'http://dev.catalystframework.org/repos/Catalyst/trunk/Catalyst-Authentication-Store-DBIx-Class';
+resources repository => 'http://dev.catalystframework.org/repos/Catalyst/Catalyst-Authentication-Store-DBIx-Class';
 
 WriteAll;
 

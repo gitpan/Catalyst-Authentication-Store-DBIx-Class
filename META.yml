@@ -26,5 +26,5 @@ requires:
   perl: 5.8.1
 resources:
   license: http://dev.perl.org/licenses/
-  repository: http://dev.catalystframework.org/repos/Catalyst/trunk/Catalyst-Authentication-Store-DBIx-Class
-version: 0.1100
+  repository: http://dev.catalystframework.org/repos/Catalyst/Catalyst-Authentication-Store-DBIx-Class
+version: 0.1200
