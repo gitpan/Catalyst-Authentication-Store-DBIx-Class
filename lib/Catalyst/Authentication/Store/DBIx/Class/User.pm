@@ -1,14 +1,16 @@
 package Catalyst::Authentication::Store::DBIx::Class::User;
 
-use strict;
-use warnings;
-use List::MoreUtils qw(all);
-use base qw/Catalyst::Authentication::User/;
-use base qw/Class::Accessor::Fast/;
+use Moose;
+use namespace::autoclean;
+extends 'Catalyst::Authentication::User';
 
-BEGIN {
-    __PACKAGE__->mk_accessors(qw/config resultset _user _roles/);
-}
+use List::MoreUtils 'all';
+use Try::Tiny;
+
+has 'config'    => (is => 'rw');
+has 'resultset' => (is => 'rw');
+has '_user'     => (is => 'rw');
+has '_roles'    => (is => 'rw');
 
 sub new {
     my ( $class, $config, $c) = @_;
@@ -197,9 +199,14 @@ sub from_session {
 sub get {
     my ($self, $field) = @_;
 
-    if ($self->_user->can($field)) {
-        return $self->_user->$field;
+    if (my $code = $self->_user->can($field)) {
+        return $self->_user->$code;
+    }
+    elsif (my $accessor =
+         try { $self->_user->result_source->column_info($field)->{accessor} }) {
+        return $self->_user->$accessor;
     } else {
+        # XXX this should probably throw
         return undef;
     }
 }
@@ -236,8 +243,19 @@ sub AUTOLOAD {
     (my $method) = (our $AUTOLOAD =~ /([^:]+)$/);
     return if $method eq "DESTROY";
 
-    $self->_user->$method(@_);
+    if (my $code = $self->_user->can($method)) {
+        return $self->_user->$code(@_);
+    }
+    elsif (my $accessor =
+         try { $self->_user->result_source->column_info($method)->{accessor} }) {
+        return $self->_user->$accessor(@_);
+    } else {
+        # XXX this should also throw
+        return undef;
+    }
 }
+
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
 __END__
@@ -250,7 +268,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1200.
+This documentation refers to version 0.1300.
 
 =head1 SYNOPSIS
 

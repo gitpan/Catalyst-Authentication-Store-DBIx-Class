@@ -19,8 +19,6 @@ BEGIN {
 
     plan tests => 17;
 
-    $ENV{TESTAPP_DB_FILE} = "$FindBin::Bin/auth.db" unless exists($ENV{TESTAPP_DB_FILE});
-
     $ENV{TESTAPP_CONFIG} = {
         name => 'TestApp',
         authentication => {
@@ -45,8 +43,6 @@ BEGIN {
         qw/Authentication/
     ];
 }
-
-use SetupDB;
 
 use Catalyst::Test 'TestApp';
 
@@ -105,10 +101,3 @@ use Catalyst::Test 'TestApp';
     my $res = request('http://localhost/user_login?username=joeuser&password=hackme');
     like( $res->content, qr/\$\Qc->model('Nonexistent::Class') did not return a resultset. Did you set user_model correctly?/, 'test for wrong user_class' );
 }
-	    
-	  
-
-
-
-# clean up
-unlink $ENV{TESTAPP_DB_FILE};

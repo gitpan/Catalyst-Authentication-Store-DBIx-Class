@@ -21,7 +21,7 @@ BEGIN {
         or plan skip_all =>
         "DBIx::Class is required for this test";
 
-    eval { require Catalyst::Plugin::Session; 
+    eval { require Catalyst::Plugin::Session;
            die unless $Catalyst::Plugin::Session::VERSION >= 0.02 }
         or plan skip_all =>
         "Catalyst::Plugin::Session >= 0.02 is required for this test";
@@ -32,8 +32,6 @@ BEGIN {
 
 
     plan tests => 8;
-
-    $ENV{TESTAPP_DB_FILE} = "$FindBin::Bin/auth.db" unless exists($ENV{TESTAPP_DB_FILE});
 
     $ENV{TESTAPP_CONFIG} = {
         name => 'TestApp',
@@ -65,8 +63,6 @@ BEGIN {
     ];
 }
 
-use SetupDB;
-
 use Test::WWW::Mechanize::Catalyst 'TestApp';
 my $m = Test::WWW::Mechanize::Catalyst->new;
 
@@ -93,6 +89,3 @@ my $m = Test::WWW::Mechanize::Catalyst->new;
     $m->get_ok( 'http://localhost/get_session_user', undef, 'request ok' );
     $m->content_is( '', "user's session deleted" );
 }
-
-# clean up
-unlink $ENV{TESTAPP_DB_FILE};

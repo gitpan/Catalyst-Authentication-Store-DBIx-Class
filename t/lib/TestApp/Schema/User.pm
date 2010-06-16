@@ -7,7 +7,11 @@ use base 'DBIx::Class';
 __PACKAGE__->load_components(qw/ Core /);
 
 __PACKAGE__->table( 'user' );
-__PACKAGE__->add_columns( qw/id username email password status role_text session_data/ );
+
+__PACKAGE__->add_columns( qw/id username email status role_text session_data/ );
+
+__PACKAGE__->add_column(password => { accessor => 'password_accessor' });
+
 __PACKAGE__->set_primary_key( 'id' );
 
 __PACKAGE__->has_many( 'map_user_role' => 'TestApp::Schema::UserRole' => 'user' );

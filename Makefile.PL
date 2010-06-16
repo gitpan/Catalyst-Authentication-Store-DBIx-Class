@@ -1,8 +1,9 @@
-use inc::Module::Install 0.87;
+use inc::Module::Install 0.91;
 
 if( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/Catalyst/Authentication/Store/DBIx/Class.pm > README' );
 }
+realclean_files 'README';
 
 ## I'd love to use can_use - but I can't seem to test for success. :-/
 eval { require Catalyst::Plugin::Authentication::Store::DBIx::Class or die 'footy'; };
@@ -16,7 +17,9 @@ if (!$@) {   #} can_use("Catalyst::Plugin::Authentication::Store::DBIx::Class") 
 You have the Catalyst::Plugin::Authentication::Store::DBIx::Class installed.
 The module you are installing supercedes it and it's presence has been known
 to cause conflicts.   We STRONGLY recommend you remove the old module before
-proceeding.  
+proceeding.
+
+You can use CPANPLUS (the cpanp command) to remove the module.
 
 You have 5 seconds to abort this install to remove the old module.
 EOM
@@ -30,17 +33,21 @@ all_from 'lib/Catalyst/Authentication/Store/DBIx/Class.pm';
 
 perl_version '5.8.1';
 
-requires (  'Catalyst::Runtime'                 => 0,
-            'Catalyst::Plugin::Authentication'  => '0.10008',
-            'Catalyst::Model::DBIC::Schema'     => 0,
-            'DBIx::Class'                       => 0,
-			'Catalyst::Model::DBIC::Schema'		=> '0.18',
-         );
-
+requires (
+    'Catalyst::Runtime'                 => '5.8',
+    'Catalyst::Plugin::Authentication'  => '0.10008',
+    'Catalyst::Model::DBIC::Schema'     => '0.18',
+    'DBIx::Class'                       => '0.08',
+    'Moose'                             => 0,
+    'namespace::autoclean'              => 0,
+    'List::MoreUtils'                   => 0,
+    'Try::Tiny'                         => 0,
+);
 
 test_requires 'Test::More';
 
 resources repository => 'http://dev.catalystframework.org/repos/Catalyst/Catalyst-Authentication-Store-DBIx-Class';
 
+auto_install;
+auto_provides;
 WriteAll;
-

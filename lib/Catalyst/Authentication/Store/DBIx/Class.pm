@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.1200";
+our $VERSION= "0.1300";
 
 
 BEGIN {
@@ -92,7 +92,7 @@ Catalyst::Authentication::Store::DBIx::Class - A storage class for Catalyst Auth
 
 =head1 VERSION
 
-This documentation refers to version 0.1200.
+This documentation refers to version 0.1300.
 
 =head1 SYNOPSIS
 
@@ -126,8 +126,8 @@ This documentation refers to version 0.1200.
         my ( $self, $c ) = @_;
 
         $c->authenticate({
-                          screen_name => $c->req->params->username,
-                          password => $c->req->params->password,
+                          screen_name => $c->req->params->{username},
+                          password => $c->req->params->{password},
                           status => [ 'registered', 'loggedin', 'active']
                           }))
     }

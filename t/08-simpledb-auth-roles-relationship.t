@@ -23,9 +23,6 @@ BEGIN {
 
     plan tests => 8;
 
-    $ENV{TESTAPP_DB_FILE} = "$FindBin::Bin/auth.db" unless exists($ENV{TESTAPP_DB_FILE});
-
-
     $ENV{TESTAPP_CONFIG} = {
         name => 'TestApp',
         'Plugin::Authentication' => {
@@ -43,8 +40,6 @@ BEGIN {
            /
     ];
 }
-
-use SetupDB;
 
 use Catalyst::Test 'TestApp';
 
@@ -71,6 +66,3 @@ use Catalyst::Test 'TestApp';
     ok( my $res = request('http://localhost/user_login?username=nuffin&password=much&detach=is_admin_user'), 'request ok' );
     is( $res->content, 'failed', 'user is not an admin and a user' );
 }
-
-# clean up
-unlink $ENV{TESTAPP_DB_FILE};
