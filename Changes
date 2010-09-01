@@ -1,5 +1,8 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1400  2010-09-01
+        * Make can() work as well as AUTOLOADing.
+
 0.1300  2010-06-16
         * Support columns with accessors that aren't the column name.
         * Fix some documentation typos.

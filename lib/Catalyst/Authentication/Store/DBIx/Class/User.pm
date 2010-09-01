@@ -238,6 +238,21 @@ sub auto_update {
     $self->_user->auto_update( @_ );
 }
 
+sub can {
+    my $self = shift;
+    return $self->SUPER::can(@_) || do {
+        my ($method) = @_;
+        if (my $code = $self->_user->can($method)) {
+            sub { shift->_user->$code(@_) }
+        } elsif (my $accessor =
+            try { $self->_user->result_source->column_info($method)->{accessor} }) {
+            sub { shift->_user->$accessor }
+        } else {
+            undef;
+        }
+    };
+}
+
 sub AUTOLOAD {
     my $self = shift;
     (my $method) = (our $AUTOLOAD =~ /([^:]+)$/);
@@ -268,7 +283,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1300.
+This documentation refers to version 0.1400.
 
 =head1 SYNOPSIS
 
@@ -346,6 +361,14 @@ By default, auto_update will call the C<auto_update()> method of the
 DBIx::Class::Row object associated with the user. It is up to you to implement
 that method (probably in your schema file)
 
+=head2 AUTOLOAD
+
+Delegates method calls to the underlieing user row.
+
+=head2 can
+
+Delegates handling of the C<< can >> method to the underlieing user row.
+
 =head1 BUGS AND LIMITATIONS
 
 None known currently, please email the author if you find any.
@@ -354,9 +377,15 @@ None known currently, please email the author if you find any.
 
 Jason Kuri (jayk@cpan.org)
 
+=head1 CONTRIBUTORS
+
+Matt S Trout (mst) <mst@shadowcat.co.uk>
+
+(fixes wrt can/AUTOLOAD sponsored by L<http://reask.com/>)
+
 =head1 LICENSE
 
-Copyright (c) 2007 the aforementioned authors. All rights
+Copyright (c) 2007-2010 the aforementioned authors. All rights
 reserved. This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 

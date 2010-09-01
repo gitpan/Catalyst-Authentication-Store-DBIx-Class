@@ -18,6 +18,14 @@ no_index:
   directory:
     - inc
     - t
+provides:
+  Catalyst::Authentication::Realm::SimpleDB:
+    file: lib/Catalyst/Authentication/Realm/SimpleDB.pm
+  Catalyst::Authentication::Store::DBIx::Class:
+    file: lib/Catalyst/Authentication/Store/DBIx/Class.pm
+    version: 0.1400
+  Catalyst::Authentication::Store::DBIx::Class::User:
+    file: lib/Catalyst/Authentication/Store/DBIx/Class/User.pm
 requires:
   Catalyst::Model::DBIC::Schema: 0.18
   Catalyst::Plugin::Authentication: 0.10008
@@ -32,4 +40,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://dev.catalystframework.org/repos/Catalyst/Catalyst-Authentication-Store-DBIx-Class
-version: 0.1300
+version: 0.1400
