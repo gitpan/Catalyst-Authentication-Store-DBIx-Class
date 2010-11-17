@@ -23,7 +23,7 @@ provides:
     file: lib/Catalyst/Authentication/Realm/SimpleDB.pm
   Catalyst::Authentication::Store::DBIx::Class:
     file: lib/Catalyst/Authentication/Store/DBIx/Class.pm
-    version: 0.1400
+    version: 0.1401
   Catalyst::Authentication::Store::DBIx::Class::User:
     file: lib/Catalyst/Authentication/Store/DBIx/Class/User.pm
 requires:
@@ -40,4 +40,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://dev.catalystframework.org/repos/Catalyst/Catalyst-Authentication-Store-DBIx-Class
-version: 0.1400
+version: 0.1401

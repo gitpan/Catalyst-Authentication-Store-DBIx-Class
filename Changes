@@ -1,5 +1,8 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1401  2010-11-16
+        * Fix call to ->load which was not passing $c
+
 0.1400  2010-09-01
         * Make can() work as well as AUTOLOADing.
 

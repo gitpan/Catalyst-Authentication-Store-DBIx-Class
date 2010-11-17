@@ -190,7 +190,7 @@ sub from_session {
         return $self->load({
             map { ($_ => $frozenuser->{$_}) }
             @{ $self->config->{id_field} }
-        });
+        }, $c);
     }
 
     return $self->load( { $self->config->{'id_field'} => $frozenuser }, $c);
@@ -283,7 +283,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1400.
+This documentation refers to version 0.1401.
 
 =head1 SYNOPSIS
 
