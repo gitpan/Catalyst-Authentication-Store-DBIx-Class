@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.1401";
+our $VERSION= "0.1500";
 
 
 BEGIN {
@@ -92,7 +92,7 @@ Catalyst::Authentication::Store::DBIx::Class - A storage class for Catalyst Auth
 
 =head1 VERSION
 
-This documentation refers to version 0.1401.
+This documentation refers to version 0.1500.
 
 =head1 SYNOPSIS
 
@@ -332,8 +332,8 @@ DBIx::Class authentication store. Reasons to do this are to avoid credential
 modification of the authinfo hash, or to avoid overlap between credential and
 store key names. It's a good idea to avoid using it in this way unless you are
 sure you have an overlap/modification issue. However, the two advanced
-retrieval methods, B<searchargs> and B<resultset>, require its use, as they
-are only processed as part of the 'dbix_class' hash.
+retrieval methods, B<searchargs>, B<result> and B<resultset>, require its use,
+as they are only processed as part of the 'dbix_class' hash.
 
 =over 4
 
@@ -366,6 +366,22 @@ username, email, or clientid - and would prefetch the data related to that user
 from the preferences table. The searchargs array is passed directly to the
 search() method associated with the user_model.
 
+=item Result
+
+The B<result> method of retrieval allows you to look up the user yourself and
+pass on the loaded user to the authentication store.
+
+    my $user = $ctx->model('MyApp::User')->find({ ... });
+
+    if ($ctx->authenticate({ dbix_class => { result => $user } })) {
+        ...
+    }
+
+Be aware that the result method will not verify that you are passing a result
+that is attached to the same user_model as specified in the config or even
+loaded from the database, as opposed to existing only in memory. It's your
+responsibility to make sure of that.
+
 =item Resultset
 
 The B<resultset> method of retrieval allows you to directly specify a
@@ -385,12 +401,11 @@ within your login action and use it for retrieving the user. A simple example:
 Be aware that the resultset method will not verify that you are passing a
 resultset that is attached to the same user_model as specified in the config.
 
-NOTE: All of these methods of user retrieval, including the resultset method,
-consider the first row returned to be the matching user. In most cases there
-will be only one matching row, but it is easy to produce multiple rows,
-especially when using the advanced retrieval methods. Remember, what you get
-when you use this module is what you would get when calling
-search(...)->first;
+NOTE: The resultset and searchargs methods of user retrieval, consider the first
+row returned to be the matching user. In most cases there will be only one
+matching row, but it is easy to produce multiple rows, especially when using the
+advanced retrieval methods. Remember, what you get when you use this module is
+what you would get when calling search(...)->first;
 
 NOTE ALSO:  The user info used to save the user to the session and to retrieve
 it is the same regardless of what method of retrieval was used.  In short,

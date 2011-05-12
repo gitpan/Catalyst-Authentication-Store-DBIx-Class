@@ -77,6 +77,32 @@ sub searchargs_login : Global {
     }
 }
 
+sub result_login : Global {
+    my ($self, $ctx) = @_;
+
+    my $user = $ctx->model('TestApp::User')->find({
+        email => $ctx->request->params->{email},
+    });
+
+    if ($user->password_accessor ne $ctx->request->params->{password}) {
+        $ctx->response->status(403);
+        $ctx->response->body('password mismatch');
+        $ctx->detach;
+    }
+
+    $ctx->authenticate({
+        dbix_class => { result => $user },
+        password   => $ctx->request->params->{password},
+    });
+
+    if ($ctx->user_exists) {
+        $ctx->res->body( $ctx->user->get('username') .  ' logged in' );
+    }
+    else {
+        $ctx->res->body('not logged in');
+    }
+}
+
 sub resultset_login : Global {
     my ( $self, $c ) = @_;
 

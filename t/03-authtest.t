@@ -17,7 +17,7 @@ BEGIN {
         or plan skip_all =>
         "DBIx::Class is required for this test";
 
-    plan tests => 17;
+    plan tests => 19;
 
     $ENV{TESTAPP_CONFIG} = {
         name => 'TestApp',
@@ -82,8 +82,13 @@ use Catalyst::Test 'TestApp';
     is( $res->content, 'nuffin logged in', 'searchargs based login ok' );
 }
 
+# result test
+{
+    ok( my $res = request('http://localhost/result_login?email=j%40cpants.org&password=letmein'), 'request ok' );
+    is( $res->content, 'jayk logged in', 'resultset based login ok' );
+}
+
 # resultset test
-# searchargs test
 {
     ok( my $res = request('http://localhost/resultset_login?email=j%40cpants.org&password=letmein'), 'request ok' );
     is( $res->content, 'jayk logged in', 'resultset based login ok' );

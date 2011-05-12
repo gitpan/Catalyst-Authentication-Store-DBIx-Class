@@ -3,7 +3,7 @@ NAME
     Catalyst Authentication using DBIx::Class
 
 VERSION
-    This documentation refers to version 0.1401.
+    This documentation refers to version 0.1500.
 
 SYNOPSIS
         use Catalyst qw/
@@ -232,9 +232,9 @@ USAGE
     credential modification of the authinfo hash, or to avoid overlap
     between credential and store key names. It's a good idea to avoid using
     it in this way unless you are sure you have an overlap/modification
-    issue. However, the two advanced retrieval methods, searchargs and
-    resultset, require its use, as they are only processed as part of the
-    'dbix_class' hash.
+    issue. However, the two advanced retrieval methods, searchargs, result
+    and resultset, require its use, as they are only processed as part of
+    the 'dbix_class' hash.
 
     Searchargs
         The searchargs method of retrieval allows you to specify an arrayref
@@ -266,6 +266,21 @@ USAGE
         passed directly to the search() method associated with the
         user_model.
 
+    Result
+        The result method of retrieval allows you to look up the user
+        yourself and pass on the loaded user to the authentication store.
+
+            my $user = $ctx->model('MyApp::User')->find({ ... });
+
+            if ($ctx->authenticate({ dbix_class => { result => $user } })) {
+                ...
+            }
+
+        Be aware that the result method will not verify that you are passing
+        a result that is attached to the same user_model as specified in the
+        config or even loaded from the database, as opposed to existing only
+        in memory. It's your responsibility to make sure of that.
+
     Resultset
         The resultset method of retrieval allows you to directly specify a
         resultset to be used for user retrieval. This allows you to create a
@@ -286,12 +301,12 @@ USAGE
         passing a resultset that is attached to the same user_model as
         specified in the config.
 
-        NOTE: All of these methods of user retrieval, including the
-        resultset method, consider the first row returned to be the matching
-        user. In most cases there will be only one matching row, but it is
-        easy to produce multiple rows, especially when using the advanced
-        retrieval methods. Remember, what you get when you use this module
-        is what you would get when calling search(...)->first;
+        NOTE: The resultset and searchargs methods of user retrieval,
+        consider the first row returned to be the matching user. In most
+        cases there will be only one matching row, but it is easy to produce
+        multiple rows, especially when using the advanced retrieval methods.
+        Remember, what you get when you use this module is what you would
+        get when calling search(...)->first;
 
         NOTE ALSO: The user info used to save the user to the session and to
         retrieve it is the same regardless of what method of retrieval was

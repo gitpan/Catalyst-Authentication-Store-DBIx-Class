@@ -74,7 +74,9 @@ sub load {
     ## User can provide an arrayref containing the arguments to search on the user class.
     ## or even provide a prepared resultset, allowing maximum flexibility for user retreival.
     ## these options are only available when using the dbix_class authinfo hash.
-    if ($dbix_class_config && exists($authinfo->{'resultset'})) {
+    if ($dbix_class_config && exists($authinfo->{'result'})) {
+	$self->_user($authinfo->{'result'});
+    } elsif ($dbix_class_config && exists($authinfo->{'resultset'})) {
         $self->_user($authinfo->{'resultset'}->first);
     } elsif ($dbix_class_config && exists($authinfo->{'searchargs'})) {
         $self->_user($self->resultset->search(@{$authinfo->{'searchargs'}})->first);
@@ -283,7 +285,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1401.
+This documentation refers to version 0.1500.
 
 =head1 SYNOPSIS
 

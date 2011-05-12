@@ -1,5 +1,9 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1500  2010-11-16
+        * Allow specifying a fully loaded DBIC result in addition to resultsets
+          of which only the first row is considered.
+
 0.1401  2010-11-16
         * Fix call to ->load which was not passing $c
 
