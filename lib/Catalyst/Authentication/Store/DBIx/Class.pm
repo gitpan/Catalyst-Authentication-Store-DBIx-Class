@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.1500";
+our $VERSION= "0.1501";
 
 
 BEGIN {
@@ -92,7 +92,7 @@ Catalyst::Authentication::Store::DBIx::Class - A storage class for Catalyst Auth
 
 =head1 VERSION
 
-This documentation refers to version 0.1500.
+This documentation refers to version 0.1501.
 
 =head1 SYNOPSIS
 

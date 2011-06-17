@@ -165,7 +165,14 @@ sub for_session {
     #return $frozenuser;
 
     my %userdata = $self->_user->get_columns();
-    return \%userdata;
+
+    # If use_userdata_from_session is set, then store all of the columns of the user obj in the session
+    if (exists($self->config->{'use_userdata_from_session'}) && $self->config->{'use_userdata_from_session'} != 0) {
+        return \%userdata;
+    } else { # Otherwise, we just need the PKs for load() to use.
+        my %pk_fields = map { ($_ => $userdata{$_}) } @{ $self->config->{id_field} };
+        return \%pk_fields;
+    }
 }
 
 sub from_session {
@@ -285,7 +292,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1500.
+This documentation refers to version 0.1501.
 
 =head1 SYNOPSIS
 

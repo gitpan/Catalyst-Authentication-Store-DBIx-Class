@@ -1,5 +1,10 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1501  2011-06-17
+        * If use_userdata_from_session isn't set, then don't store more
+          fields than we need in the session -- only the fields we need to
+          load the object from the DB again.
+
 0.1500  2010-11-16
         * Allow specifying a fully loaded DBIC result in addition to resultsets
           of which only the first row is considered.
