@@ -8,7 +8,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 1.00'
+generated_by: 'Module::Install version 1.01'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -18,14 +18,6 @@ no_index:
   directory:
     - inc
     - t
-provides:
-  Catalyst::Authentication::Realm::SimpleDB:
-    file: lib/Catalyst/Authentication/Realm/SimpleDB.pm
-  Catalyst::Authentication::Store::DBIx::Class:
-    file: lib/Catalyst/Authentication/Store/DBIx/Class.pm
-    version: 0.1501
-  Catalyst::Authentication::Store::DBIx::Class::User:
-    file: lib/Catalyst/Authentication/Store/DBIx/Class/User.pm
 requires:
   Catalyst::Model::DBIC::Schema: 0.18
   Catalyst::Plugin::Authentication: 0.10008
@@ -38,5 +30,5 @@ requires:
   perl: 5.8.1
 resources:
   license: http://dev.perl.org/licenses/
-  repository: http://dev.catalystframework.org/repos/Catalyst/Catalyst-Authentication-Store-DBIx-Class
-version: 0.1501
+  repository: git://git.shadowcat.co.uk/catagits/Catalyst-Authentication-Store-DBIx-Class.git
+version: 0.1502

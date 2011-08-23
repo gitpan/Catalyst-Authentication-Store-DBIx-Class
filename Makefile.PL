@@ -46,7 +46,7 @@ requires (
 
 test_requires 'Test::More';
 
-resources repository => 'http://dev.catalystframework.org/repos/Catalyst/Catalyst-Authentication-Store-DBIx-Class';
+resources repository => 'git://git.shadowcat.co.uk/catagits/Catalyst-Authentication-Store-DBIx-Class.git',
 
 auto_install;
 auto_provides;

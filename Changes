@@ -1,5 +1,8 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1502  2011-08-24
+        * Switch repository to git (fREW Schmidt)
+
 0.1501  2011-06-17
         * If use_userdata_from_session isn't set, then don't store more
           fields than we need in the session -- only the fields we need to
