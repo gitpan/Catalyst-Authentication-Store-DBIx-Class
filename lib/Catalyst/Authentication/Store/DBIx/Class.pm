@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Class::Accessor::Fast/;
 
-our $VERSION= "0.1502";
+our $VERSION= "0.1503";
 
 
 BEGIN {
@@ -92,7 +92,7 @@ Catalyst::Authentication::Store::DBIx::Class - A storage class for Catalyst Auth
 
 =head1 VERSION
 
-This documentation refers to version 0.1502.
+This documentation refers to version 0.1503.
 
 =head1 SYNOPSIS
 
@@ -100,41 +100,40 @@ This documentation refers to version 0.1502.
                     Authentication
                     Authorization::Roles/;
 
-    __PACKAGE__->config->{authentication} =
-                    {
-                        default_realm => 'members',
-                        realms => {
-                            members => {
-                                credential => {
-                                    class => 'Password',
-                                    password_field => 'password',
-                                    password_type => 'clear'
-                                },
-                                store => {
-                                    class => 'DBIx::Class',
-            	                    user_model => 'MyApp::User',
-            	                    role_relation => 'roles',
-            	                    role_field => 'rolename',
-            	                }
-                            }
-                    	}
-                    };
+    __PACKAGE__->config('Plugin::Authentication' => {
+        default_realm => 'members',
+        realms => {
+            members => {
+                credential => {
+                    class => 'Password',
+                    password_field => 'password',
+                    password_type => 'clear'
+                },
+                store => {
+                    class => 'DBIx::Class',
+                    user_model => 'MyApp::User',
+                    role_relation => 'roles',
+                    role_field => 'rolename',
+                }
+            }
+        }
+    });
 
     # Log a user in:
 
     sub login : Global {
-        my ( $self, $c ) = @_;
+        my ( $self, $ctx ) = @_;
 
-        $c->authenticate({
-                          screen_name => $c->req->params->{username},
-                          password => $c->req->params->{password},
+        $ctx->authenticate({
+                          screen_name => $ctx->req->params->{username},
+                          password => $ctx->req->params->{password},
                           status => [ 'registered', 'loggedin', 'active']
                           }))
     }
 
     # verify a role
 
-    if ( $c->check_user_roles( 'editor' ) ) {
+    if ( $ctx->check_user_roles( 'editor' ) ) {
         # do editor stuff
     }
 
@@ -154,25 +153,24 @@ L<Catalyst::Authentication::Realm::SimpleDB> for a simplified setup.
 The DBIx::Class storage module has several configuration options
 
 
-    __PACKAGE__->config->{authentication} =
-                    {
-                        default_realm => 'members',
-                        realms => {
-                            members => {
-                                credential => {
-                                    # ...
-                                },
-                                store => {
-                                    class => 'DBIx::Class',
-            	                    user_model => 'MyApp::User',
-            	                    role_relation => 'roles',
-            	                    role_field => 'rolename',
-            	                    ignore_fields_in_find => [ 'remote_name' ],
-            	                    use_userdata_from_session => 1,
-            	                }
-                	        }
-                    	}
-                    };
+    __PACKAGE__->config('Plugin::Authentication' => {
+        default_realm => 'members',
+        realms => {
+            members => {
+                credential => {
+                    # ...
+                },
+                store => {
+                    class => 'DBIx::Class',
+                    user_model => 'MyApp::User',
+                    role_relation => 'roles',
+                    role_field => 'rolename',
+                    ignore_fields_in_find => [ 'remote_name' ],
+                    use_userdata_from_session => 1,
+                }
+            }
+        }
+    });
 
 =over 4
 
@@ -183,7 +181,7 @@ contains the class name of the store to be used.
 
 =item user_model
 
-Contains the model name (as passed to $c->model()) of the DBIx::Class schema
+Contains the model name (as passed to C<< $ctx->model() >>) of the DBIx::Class schema
 to use as the source for user information. This config item is B<REQUIRED>.
 
 (Note that this option used to be called C<< user_class >>. C<< user_class >> is
@@ -215,7 +213,7 @@ identifying the role.
 =item ignore_fields_in_find
 
 This item is an array containing fields that may be passed to the
-$c->authenticate() routine (and therefore find_user in the storage class), but
+C<< $ctx->authenticate() >> routine (and therefore find_user in the storage class), but
 which should be ignored when creating the DBIx::Class search to retrieve a
 user. This makes it possible to avoid problems when a credential requires an
 authinfo element whose name overlaps with a column name in your users table.
@@ -232,11 +230,11 @@ is retrieved from the session and used as-is.
 B<NOTE>: Since the user object's column
 data is only stored in the session during the initial authentication of
 the user, turning this on can potentially lead to a situation where the data
-in $c->user is different from what is stored the database.  You can force
-a reload of the data from the database at any time by calling $c->user->get_object(1);
-Note that this will update $c->user for the remainder of this request.
+in C<< $ctx->user >> is different from what is stored the database.  You can force
+a reload of the data from the database at any time by calling C<< $ctx->user->get_object(1); >>
+Note that this will update C<< $ctx->user >> for the remainder of this request.
 It will NOT update the session.  If you need to update the session
-you should call $c->update_user_in_session() as well.
+you should call C<< $ctx->update_user_in_session() >> as well.
 
 =item store_user_class
 
@@ -267,7 +265,7 @@ is not used at all.
 
 The L<Catalyst::Authentication::Store::DBIx::Class> storage module
 is not called directly from application code.  You interface with it
-through the $c->authenticate() call.
+through the $ctx->authenticate() call.
 
 There are three methods you can use to retrieve information from the DBIx::Class
 storage module.  They are Simple retrieval, and the advanced retrieval methods
@@ -280,9 +278,9 @@ simple retrieval allows you to simply to provide the column => value pairs
 that should be used to locate the user in question. An example of this usage
 is below:
 
-    if ($c->authenticate({
-                          screen_name => $c->req->params->{'username'},
-                          password => $c->req->params->{'password'},
+    if ($ctx->authenticate({
+                          screen_name => $ctx->req->params->{'username'},
+                          password => $ctx->req->params->{'password'},
                           status => [ 'registered', 'active', 'loggedin']
                          })) {
 
@@ -344,7 +342,7 @@ the two arguments to the search() method from L<DBIx::Class::ResultSet>.  If pro
 all other args are ignored, and the search args provided are used directly to locate
 the user.  An example will probably make more sense:
 
-    if ($c->authenticate(
+    if ($ctx->authenticate(
         {
             password => $password,
             'dbix_class' =>
@@ -388,10 +386,10 @@ The B<resultset> method of retrieval allows you to directly specify a
 resultset to be used for user retrieval. This allows you to create a resultset
 within your login action and use it for retrieving the user. A simple example:
 
-    my $rs = $c->model('MyApp::User')->search({ email => $c->request->params->{'email'} });
+    my $rs = $ctx->model('MyApp::User')->search({ email => $ctx->request->params->{'email'} });
        ... # further $rs adjustments
 
-    if ($c->authenticate({
+    if ($ctx->authenticate({
                            password => $password,
                            'dbix_class' => { resultset => $rs }
                          })) {

@@ -292,7 +292,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1502.
+This documentation refers to version 0.1503.
 
 =head1 SYNOPSIS
 

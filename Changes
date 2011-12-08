@@ -1,5 +1,10 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1503  2011-12-08
+        * Change docs to show $c->config('Plugin::Authentication' => {...
+          rather than $c->config->{authentication}. The new key, and method
+          rather than hash access style are both preferred and recommended.
+
 0.1502  2011-08-24
         * Switch repository to git (fREW Schmidt)
 
