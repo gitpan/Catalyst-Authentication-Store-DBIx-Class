@@ -189,7 +189,17 @@ sub from_session {
 #
 ## if use_userdata_from_session is defined in the config, we fill in the user data from the session.
     if (exists($self->config->{'use_userdata_from_session'}) && $self->config->{'use_userdata_from_session'} != 0) {
-        my $obj = $self->resultset->new_result({ %$frozenuser });
+
+        # We need to use inflate_result here since we -are- inflating a
+        # result object from cached data, not creating a fresh one.
+        # Components such as EncodedColumn wrap new() to ensure that a
+        # provided password is hashed on the way in, and re-running the
+        # hash function on data being restored is expensive and incorrect.
+
+        my $class = $self->resultset->result_class;
+        my $source = $self->resultset->result_source;
+        my $obj = $class->inflate_result($source, { %$frozenuser });
+
         $obj->in_storage(1);
         $self->_user($obj);
         return $self;

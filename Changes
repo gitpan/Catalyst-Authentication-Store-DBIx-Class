@@ -1,5 +1,9 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1504  2012-10-05
+        * Make use_userdata_from_session use inflate_result since this is
+          already-stored data, not a "new" object being created
+
 0.1503  2011-12-08
         * Change docs to show $c->config('Plugin::Authentication' => {...
           rather than $c->config->{authentication}. The new key, and method
