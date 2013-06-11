@@ -23,7 +23,8 @@ BEGIN {
 
     plan tests => 8;
 
-    $ENV{TESTAPP_CONFIG} = {
+    use TestApp;
+    TestApp->config( {
         name => 'TestApp',
         authentication => {
             default_realm => "users",
@@ -43,13 +44,13 @@ BEGIN {
                 },
             },
         },
-    };
+    } );
 
-    $ENV{TESTAPP_PLUGINS} = [
+    TestApp->setup(
         qw/Authentication
            Authorization::Roles
            /
-    ];
+    );
 }
 
 use Catalyst::Test 'TestApp';

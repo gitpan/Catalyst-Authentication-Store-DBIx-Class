@@ -33,7 +33,8 @@ BEGIN {
 
     plan tests => 4;
 
-    $ENV{TESTAPP_CONFIG} = {
+    use TestApp;
+    TestApp->config( {
         name => 'TestApp',	
         authentication => {
             default_realm => "users",
@@ -50,15 +51,15 @@ BEGIN {
                 },
             },
         },
-    };
+    } );
 
-    $ENV{TESTAPP_PLUGINS} = [
+    TestApp->setup(
         qw/Authentication
             Session
 		    Session::Store::Dummy		   
             Session::State::Cookie				 
            /
-    ];
+    );
 }
 
 use Test::WWW::Mechanize::Catalyst 'TestApp';

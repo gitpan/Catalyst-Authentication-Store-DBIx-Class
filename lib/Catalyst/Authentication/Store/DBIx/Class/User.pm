@@ -261,7 +261,9 @@ sub can {
     my $self = shift;
     return $self->SUPER::can(@_) || do {
         my ($method) = @_;
-        if (my $code = $self->_user->can($method)) {
+        if (not $self->_user) {
+            undef;
+        } elsif (my $code = $self->_user->can($method)) {
             sub { shift->_user->$code(@_) }
         } elsif (my $accessor =
             try { $self->_user->result_source->column_info($method)->{accessor} }) {

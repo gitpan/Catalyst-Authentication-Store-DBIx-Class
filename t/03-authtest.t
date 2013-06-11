@@ -19,7 +19,8 @@ BEGIN {
 
     plan tests => 19;
 
-    $ENV{TESTAPP_CONFIG} = {
+    use TestApp;
+    TestApp->config( {
         name => 'TestApp',
         authentication => {
             default_realm => "users",
@@ -37,11 +38,11 @@ BEGIN {
                 },
             },
         },
-    };
+    } );
 
-    $ENV{TESTAPP_PLUGINS} = [
+    TestApp->setup(
         qw/Authentication/
-    ];
+    );
 }
 
 use Catalyst::Test 'TestApp';
@@ -102,7 +103,7 @@ use Catalyst::Test 'TestApp';
 
 
 {
-    $ENV{TESTAPP_CONFIG}->{authentication}->{realms}->{users}->{store}->{user_model} = 'Nonexistent::Class';
+    TestApp->config->{authentication}->{realms}->{users}->{store}->{user_model} = 'Nonexistent::Class';
     my $res = request('http://localhost/user_login?username=joeuser&password=hackme');
     like( $res->content, qr/\$\Qc->model('Nonexistent::Class') did not return a resultset. Did you set user_model correctly?/, 'test for wrong user_class' );
 }

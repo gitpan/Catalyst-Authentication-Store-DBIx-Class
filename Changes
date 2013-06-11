@@ -1,5 +1,12 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1505 2013-06-10
+       * Fix RT#82944 - test fails on perl >= 5.17.3
+
+       * Return undef if there isn't a user. This will cause an exception
+          but a more helpful exception (probably from DBIC) than the inability
+          to call a method in this code.
+
 0.1504  2012-10-05
         * Make use_userdata_from_session use inflate_result since this is
           already-stored data, not a "new" object being created
