@@ -72,7 +72,7 @@ sub load {
     }
 
     ## User can provide an arrayref containing the arguments to search on the user class.
-    ## or even provide a prepared resultset, allowing maximum flexibility for user retreival.
+    ## or even provide a prepared resultset, allowing maximum flexibility for user retrieval.
     ## these options are only available when using the dbix_class authinfo hash.
     if ($dbix_class_config && exists($authinfo->{'result'})) {
 	$self->_user($authinfo->{'result'});
@@ -261,7 +261,9 @@ sub can {
     my $self = shift;
     return $self->SUPER::can(@_) || do {
         my ($method) = @_;
-        if (not $self->_user) {
+        if (not ref $self) {
+            undef;
+        } elsif (not $self->_user) {
             undef;
         } elsif (my $code = $self->_user->can($method)) {
             sub { shift->_user->$code(@_) }
@@ -278,6 +280,8 @@ sub AUTOLOAD {
     my $self = shift;
     (my $method) = (our $AUTOLOAD =~ /([^:]+)$/);
     return if $method eq "DESTROY";
+
+    return unless ref $self;
 
     if (my $code = $self->_user->can($method)) {
         return $self->_user->$code(@_);
@@ -304,7 +308,7 @@ module.
 
 =head1 VERSION
 
-This documentation refers to version 0.1503.
+This documentation refers to version 0.1506.
 
 =head1 SYNOPSIS
 
@@ -384,11 +388,11 @@ that method (probably in your schema file)
 
 =head2 AUTOLOAD
 
-Delegates method calls to the underlieing user row.
+Delegates method calls to the underlying user row.
 
 =head2 can
 
-Delegates handling of the C<< can >> method to the underlieing user row.
+Delegates handling of the C<< can >> method to the underlying user row.
 
 =head1 BUGS AND LIMITATIONS
 

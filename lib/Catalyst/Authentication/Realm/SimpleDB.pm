@@ -238,7 +238,7 @@ you can refer to the following:
 =over
 
 =item *
-L<Catalyst::Manual::Tutorial::Authentication>
+L<Catalyst::Manual::Tutorial>
 
 =item *
 L<Catalyst::Plugin::Authentication>

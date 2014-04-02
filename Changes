@@ -1,5 +1,10 @@
 Revision history for Catalyst-Plugin-Authentication-Store-DBIx-Class
 
+0.1506 2014-04-02
+       * Fix doc bugs. RT#87372
+       * Fix calling User->can() as a class method. RT#90715
+       * Fix Catalyst tutorial link. RT#47043
+
 0.1505 2013-06-10
        * Fix RT#82944 - test fails on perl >= 5.17.3
 
